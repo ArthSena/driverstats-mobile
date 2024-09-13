@@ -1,0 +1,151 @@
+/* iOS Cordova Tweak */
+.device-cordova.device-ios {
+  height: 100vh;
+}
+
+/* Your app custom styles here */
+:root {
+  --primary: #d8fc0b;
+  --black: #222;
+  --black2: #2a2a2a;
+  --black3: #404040;
+  --green: #31db31;
+  --red: #d44232;
+  --blue: #00ace9;
+
+}
+
+.page-content {
+  overflow: hidden;
+  box-sizing: content-box;
+  overflow-y: scroll;
+}
+
+.fab-right-bottom{
+  margin-right: 3%;
+  color: #222;
+}
+
+.m-bottom {
+  margin-bottom: 220px;	
+}
+.color-green {
+  color: var(--green);
+  background: var(--green);
+}
+
+.color-red {
+  color: var(--red);
+  background: var(--red);
+}
+
+.button-fill {
+  color: #222;
+}
+
+.navbar-title {
+  height: 100%;
+  margin-left: 5%;
+}
+
+.navbar-title span {
+  color: var(--primary)
+}
+
+.welcome {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  width: 70%;
+  margin-top: 5%;
+  padding: 5%;
+  background: #fff;
+
+}
+.dark .welcome {
+  background: var(--black2);
+
+}
+.card-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-flex .card {
+  width: 100px;
+  background: #fff;
+
+}
+
+.dark .card-flex .card {
+  background: var(--black2);
+}
+
+.card-flex .card-header {
+  font-size: 12px;
+  padding: 10%;
+  margin: auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  border-bottom: 2px solid #f1f1f1;
+}
+
+.dark .card-flex .card-header {
+  border-bottom: 2px solid var(--black3);
+}
+
+.card-flex .card-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 10%;
+  height: 40px;
+}
+
+.charts {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.pie-chart {
+  width: 400px;
+  height: 400px;
+
+  @media (max-width: 750px) {
+    width: 300px;
+    height: 300px;
+  }
+
+  @media (max-width: 550px) {
+    width: 200px;
+    height: 200px;
+  }
+
+  @media (max-width: 350px) {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+.bar-chart {
+  width: 600px;
+
+  @media (max-width: 750px) {
+    width: 500px;
+  }
+
+  @media (max-width: 550px) {
+    width: 400px;
+  }
+
+  @media (max-width: 350px) {
+    width: 300px;
+  }
+}

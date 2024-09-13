@@ -1,0 +1,162 @@
+<template>
+  
+  <div class="page" data-name="home">
+    <!-- Top Navbar -->
+    <div class="navbar navbar-large">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner">
+        <div class="title-large">
+          <div class="title-large-text">
+            <span>Driver</span> Stats
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fab fab-right-bottom">
+      <a href="#">
+        <i class="icon f7-icons" style="color: #222;">plus</i>
+      </a>
+    </div>
+
+    <!-- Scrollable page content-->
+    <div class="page-content">
+
+      <!-- <a href="#" class="button button-fill login-screen-open" data-login-screen="#my-login-screen">Login Screen</a> -->
+
+      <div class="block welcome">
+            <h2>Welcome to Driver Stats!</h2>
+            <p>This app is designed to help you track and analyze your driver's performance.</p>
+            <a href="#view-registry-list" class="button button-fill button-raised" style="padding: 20px;">Start Tracking</a>
+      </div>
+
+      <div class="block-title">Hello, user!</div>
+      <div class="block card-flex">
+        <div class="card">
+          <div class="card-header">Trips</div>
+          <div class="card-content" style="color: var(--primary);">50</div>
+        </div>
+        <div class="card">
+          <div class="card-header">Billed</div>
+          <div class="card-content"  style="color: var(--green);">R$ 4.256,98</div>
+        </div>
+        <div class="card">
+          <div class="card-header">Expenses</div>
+          <div class="card-content"  style="color: var(--red);">R$ 1.024,22</div>
+        </div>
+        <div class="card">
+          <div class="card-header">Mileage</div>
+          <div class="card-content" style="color: var(--blue);">4092.12 KM</div>
+        </div>
+      </div>
+
+      <div class="block-title">Monthly / Weekly Driver Statistics</div>
+      <div class=" block charts">
+        <div class="pie-chart">
+          <canvas id="monthlyPieChart"></canvas>
+        </div>
+        <div class="pie-chart">
+          <canvas id="weeklyPieChart"></canvas>
+        </div>
+      </div>
+
+      <div class="block-title">Weekly Hour Worked Statistics</div>
+      <div class="block charts">
+        <div class="bar-chart">
+          <canvas id="weeklyBarChart"></canvas>
+        </div>
+      </div>
+
+      <div class="block-title">Annually Driver Statistics</div>
+      <div class=" blockcharts">
+        <div class="bar-chart">
+          <canvas id="annuallyLineChart"></canvas>
+        </div>
+      </div>
+
+      <div class="block-title">Last Registries</div>
+      <div class="block data-table">
+        <table>
+          <thead>
+            <tr>
+              <th class="numeric-cell">#</th>
+              <th class="numeric-cell">Created</th>
+              <th class="numeric-cell">Closed</th>
+              <th class="numeric-cell">Billed (R$)</th>
+              <th class="numeric-cell">Expensed (R$)</th>
+              <th class="numeric-cell">Mileage (KM)</th>
+              <th class="button-cell">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="numeric-cell">1</td>
+              <td class="numeric-cell">13/09/2024 13:22</td>
+              <td class="numeric-cell">13/09/2024 20:22</td>
+              <td class="numeric-cell">124.95</td>
+              <td class="numeric-cell">45.23</td>
+              <td class="numeric-cell">112.23</td>
+              <td class="button-cell"><a class="button button-fill">+</a></td>
+            </tr>
+            <tr>
+              <td class="label-cell">2</td>
+              <td class="numeric-cell">12/09/2024 13:12</td>
+              <td class="numeric-cell">12/09/2024 21:13</td>
+              <td class="numeric-cell">132.12</td>
+              <td class="numeric-cell">52.24</td>
+              <td class="numeric-cell">146.52</td>
+              <td class="button-cell"><a class="button button-fill">+</a></td>
+            </tr>
+            <tr>
+              <td class="label-cell">3</td>
+              <td class="numeric-cell">11/09/2024 12:25</td>
+              <td class="numeric-cell">11/09/2024 18:15</td>
+              <td class="numeric-cell">165.52</td>
+              <td class="numeric-cell">12.00</td>
+              <td class="numeric-cell">100.25</td>
+              <td class="button-cell"><a class="button button-fill">+</a></td>
+            </tr>
+            <tr>
+              <td class="label-cell">4</td>
+              <td class="numeric-cell">10/09/2024 13:24</td>
+              <td class="numeric-cell">10/09/2024 20:11</td>
+              <td class="numeric-cell">125.23</td>
+              <td class="numeric-cell">23.02</td>
+              <td class="numeric-cell">129.52</td>
+              <td class="button-cell"><a class="button button-fill">+</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="data-table-footer">
+          <div class="data-table-rows-select">Per page:<div class="input input-dropdown">
+              <select>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="all">All</option>
+              </select>
+            </div>
+          </div>
+          <div class="data-table-pagination">
+            <span class="data-table-pagination-label">1-5 of 10</span>
+            <a href="#" class="link disabled">
+              <i class="icon icon-prev color-gray"></i>
+            </a>
+            <a href="#" class="link">
+              <i class="icon icon-next color-gray"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="m-bottom"></div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+export default () => {
+  return $render;
+}
+</script>
