@@ -1,0 +1,40 @@
+<template>
+  <div class="page" data-name="registry">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span>Back</span>
+          </a>
+        </div>
+        <div class="title">${currentRegistry.title}</div>
+        <div class="right">
+          <a href="#" class="btn-circle btn-edit"><div class="f7-icons">pencil</div></a>
+          <a href="#" class="btn-circle btn-del"><div class="f7-icons">trash</div></a>
+        </div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="block-title">About ${currentRegistry.createdAt} - ${currentRegistry.closedAt} </div>
+      <div class="block">
+        ${currentRegistry.createdAt}
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  export default (props, { $f7route, $store }) => {
+    const registries = $store.getters.registries;
+    const registryId = $f7route.params.id;
+    let currentRegistry;
+    registries.value.forEach((registry) => {
+      if (registry.id === registryId) {
+        currentRegistry = registry;
+      }
+    });
+
+    return $render;
+  };
+</script>

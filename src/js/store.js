@@ -3,32 +3,94 @@ import { createStore } from 'framework7';
 
 const store = createStore({
   state: {
-    products: [
+    registries: [
+      {
+        id: 'fd524219-bf70-429e-97f2-ed3afed40c25',
+        createdAt: '13/09/2024 15:19',
+        closedAt: '',
+        status: 'OPPENED',
+        initialMileage: 0,
+        finalMileage: 132.52,
+        billed: 124.25,
+        trips: 8,
+      },
+      {
+        id: '6b450f6b-f1de-4b9f-84a5-d912aa5f5eca',
+        createdAt: '13/09/2024 15:19',
+        closedAt: '13/09/2024 22:19',
+        status: 'CLOSED',
+        initialMileage: 0,
+        finalMileage: 132.52,
+        billed: 124.25,
+        trips: 8,
+      },
+      {
+        id: '88e5ff2a-4da3-482d-9561-fbf53e495b46',
+        createdAt: '13/09/2024 15:19',
+        closedAt: '13/09/2024 22:19',
+        status: 'CLOSED',
+        initialMileage: 0,
+        finalMileage: 132.52,
+        billed: 124.25,
+        trips: 8,
+      },
+    ],
+    expenses: [
+      {
+        id: '88e5ff2a-4da3-482d-9561-fbf53e495b46',
+        date: '13/09/2024',
+        category: 'Business',
+        description: 'Fuel lorem ipsum dolor sit amet, consectetur t',
+        amount: 50.25,
+      },
+      {
+        id: '88e5ff2a-4da3-482d-9561-fbsf3e495b46',
+        date: '13/09/2024',
+        category: 'Food',
+        description: 'Market',
+        amount: 72.21,
+      }
+    ],
+    categories: [
       {
         id: '1',
-        title: 'Apple iPhone 8',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi tempora similique reiciendis, error nesciunt vero, blanditiis pariatur dolor, minima sed sapiente rerum, dolorem corrupti hic modi praesentium unde saepe perspiciatis.'
+        name: 'Business',
       },
       {
         id: '2',
-        title: 'Apple iPhone 8 Plus',
-        description: 'Velit odit autem modi saepe ratione totam minus, aperiam, labore quia provident temporibus quasi est ut aliquid blanditiis beatae suscipit odio vel! Nostrum porro sunt sint eveniet maiores, dolorem itaque!'
+        name: 'Food',
       },
       {
         id: '3',
-        title: 'Apple iPhone X',
-        description: 'Expedita sequi perferendis quod illum pariatur aliquam, alias laboriosam! Vero blanditiis placeat, mollitia necessitatibus reprehenderit. Labore dolores amet quos, accusamus earum asperiores officiis assumenda optio architecto quia neque, quae eum.'
+        name: 'Transportation',
+      },
+      {
+        id: '4',
+        name: 'Health',
+      },
+      {
+        id: '5',
+        name: 'Other',
       },
     ]
   },
   getters: {
-    products({ state }) {
-      return state.products;
-    }
+    registries({ state }) {
+      return state.registries;
+    },
+    expenses({ state }) {
+      return state.expenses;
+    },
+    categories({ state }) {
+      return state.categories;
+    },
   },
   actions: {
-    addProduct({ state }, product) {
-      state.products = [...state.products, product];
+    addRegistry({ state }, registry) {
+      state.registries = [...state.registries, registry];
+    },
+    addExpense({ state }, expense) {
+      state.expenses = [...state.expenses, expense];
     },
   },
 })

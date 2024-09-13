@@ -6,41 +6,45 @@
         <div class="title">Expenses</div>
       </div>
     </div>
+
+    <div class="fab fab-right-bottom">
+      <a href="#" class="color-red" style="color: #222;">
+        <!-- First icon is visible when Speed Dial actions are closed -->
+        <i class="icon f7-icons">plus</i>
+        <!-- Second icon is visible when Speed Dial actions are opened -->
+        <i class="icon f7-icons">xmark</i>
+      </a>
+      <!-- Speed Dial action buttons -->
+      <div class="fab-buttons fab-buttons-top">
+        <a href="#" class="color-red" style="color: #222;"><i class="icon f7-icons">money_dollar</i></a>
+        <a href="#" class="color-red" style="color: #222;"><i class="icon f7-icons">tag</i></a>
+      </div>
+    </div>
+
     <div class="page-content">
       <div class="list list-strong list-dividers-ios list-outline-ios inset-md">
         <ul>
-          ${products.value.map((product) => $h`
+          ${expenses.value.map((expense) => $h`
           <li>
-            <a class="item-content item-link" href="/product/${product.id}/">
+            <a class="item-content item-link" href="/expense/${expense.id}/">
               <div class="item-inner">
-                <div class="item-title">${product.title}</div>
+                <div class="item-title"> <span style="color: #d44232;">-${expense.amount} R$</span> ~ ${expense.description}</div>
+                <div>
+                  ${expense.date}
+                </div>
               </div>
             </a>
           </li>
           `)}
         </ul>
       </div>
-      ${products.value.length === 3 && $h`
-      <div class="block">
-        <button class="button button-fill" @click=${addProduct}>Add Product</Button>
-      </div>
-      `}
     </div>
+    
   </div>
 </template>
 <script>
   export default (props, { $store }) => {
-    const products = $store.getters.products;
-
-    const addProduct = () => {
-      $store.dispatch('addProduct', {
-        id: '4',
-        title: 'Apple iPhone 12',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi tempora similique reiciendis, error nesciunt vero, blanditiis pariatur dolor, minima sed sapiente rerum, dolorem corrupti hic modi praesentium unde saepe perspiciatis.'
-      });
-    }
-
+    const expenses = $store.getters.expenses;
     return $render;
   }
-
 </script>

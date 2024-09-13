@@ -4,33 +4,40 @@
       <div class="navbar-bg"></div>
       <div class="navbar-inner sliding">
         <div class="title">Registries</div>
+
+
       </div>
     </div>
+
+    <div class="fab fab-right-bottom">
+      <a href="#">
+        <i class="icon f7-icons" style="color: #222;">plus</i>
+      </a>
+    </div>
+
     <div class="page-content">
+      
       <div class="list list-strong list-dividers-ios list-outline-ios inset-md">
         <ul>
-          ${products.value.map((product) => $h`
+          ${registries.value.map((registry) => $h`
           <li>
-            <a class="item-content item-link" href="/product/${product.id}/">
+            <a class="item-content item-link" href="/registry/${registry.id}/">
               <div class="item-inner">
-                <div class="item-title">${product.title}</div>
+                <div class="registry-item-title">${registry.createdAt} - ${registry.closedAt}</div>
+                <span class="badge registry-status ${registry.status}"> ${registry.status}</span>
+
               </div>
             </a>
           </li>
           `)}
         </ul>
       </div>
-      ${products.value.length === 3 && $h`
-      <div class="block">
-        <button class="button button-fill" @click=${addProduct}>Add Product</Button>
-      </div>
-      `}
     </div>
   </div>
 </template>
 <script>
   export default (props, { $store }) => {
-    const products = $store.getters.products;
+    const registries = $store.getters.registries;
 
     const addProduct = () => {
       $store.dispatch('addProduct', {
