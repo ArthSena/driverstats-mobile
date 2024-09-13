@@ -5,10 +5,15 @@
     <div class="navbar navbar-large">
       <div class="navbar-bg"></div>
       <div class="navbar-inner">
+        <div class="title">
+          <span>Driver</span> Stats
+        </div>
+
         <div class="title-large">
           <div class="title-large-text">
             <span>Driver</span> Stats
           </div>
+
         </div>
       </div>
     </div>
@@ -30,23 +35,23 @@
             <a href="#view-registry-list" class="button button-fill button-raised" style="padding: 20px;">Start Tracking</a>
       </div>
 
-      <div class="block-title">Hello, user!</div>
+      <div class="block-title">Hello, <span>Arthur</span>!</div>
       <div class="block card-flex">
         <div class="card">
           <div class="card-header">Trips</div>
-          <div class="card-content" style="color: var(--primary);">50</div>
+          <div class="card-content">300<span class="card-plus">(+5%)</span></div>
         </div>
         <div class="card">
-          <div class="card-header">Billed</div>
-          <div class="card-content"  style="color: var(--green);">R$ 4.256,98</div>
+          <div class="card-header">Billed (R$)</div>
+          <div class="card-content">4.256,98<span class="card-negative">(-4%)</span></div>
         </div>
         <div class="card">
-          <div class="card-header">Expenses</div>
-          <div class="card-content"  style="color: var(--red);">R$ 1.024,22</div>
+          <div class="card-header">Expensed (R$)</div>
+          <div class="card-content">1.024,22<span class="card-neutral">(+0%)</span></div>
         </div>
         <div class="card">
-          <div class="card-header">Mileage</div>
-          <div class="card-content" style="color: var(--blue);">4092.12 KM</div>
+          <div class="card-header">Mileage (KM)</div>
+          <div class="card-content">4092.12<span class="card-negative">(+12%)</span></div>
         </div>
       </div>
 
@@ -68,7 +73,7 @@
       </div>
 
       <div class="block-title">Annually Driver Statistics</div>
-      <div class=" blockcharts">
+      <div class=" block charts">
         <div class="bar-chart">
           <canvas id="annuallyLineChart"></canvas>
         </div>

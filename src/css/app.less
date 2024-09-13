@@ -43,9 +43,12 @@
   color: #222;
 }
 
-.navbar-title {
-  height: 100%;
-  margin-left: 5%;
+.navbar-inner span {
+  color: var(--primary);
+}
+
+.block-title span {
+  color: var(--primary);
 }
 
 .navbar-title span {
@@ -66,15 +69,16 @@
 }
 .dark .welcome {
   background: var(--black2);
-
 }
+
 .card-flex {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .card-flex .card {
-  width: 100px;
+  width: 120px;
+  margin: 5px;
   background: #fff;
 
 }
@@ -84,6 +88,7 @@
 }
 
 .card-flex .card-header {
+  height: 0px;
   font-size: 12px;
   padding: 10%;
   margin: auto;
@@ -99,11 +104,27 @@
 
 .card-flex .card-content {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 10%;
-  height: 40px;
+  height: 70px;
+}
+
+.card-plus {
+  font-weight: 600;
+  font-size: 15px;
+  color: #0f0;
+}
+.card-neutral {
+  font-weight: 600;
+  font-size: 15px;
+  color: #9e9e9e;
+}
+.card-negative {
+  font-weight: 600;
+  font-size: 15px;
+  color: #ff2c15;
 }
 
 .charts {

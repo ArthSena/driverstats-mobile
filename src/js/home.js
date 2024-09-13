@@ -3,8 +3,8 @@ new Chart(document.getElementById('monthlyPieChart'), {
     type: 'doughnut',
     data: {
         labels: [
-            'Earned: R$ 4024.98',
-            'Expense: R$ 1024.22',
+            'Billed: R$ 4024.98',
+            'Expensed: R$ 1024.22',
             'Milleage: 4092.12 KM',
         ],
         datasets: [{
@@ -25,8 +25,8 @@ new Chart(document.getElementById('weeklyPieChart'), {
     type: 'doughnut',
     data: {
         labels: [
-            'Earned: R$ 998.72',
-            'Expense: R$ 340.02',
+            'Billed: R$ 998.72',
+            'Expensed: R$ 340.02',
             'Milleage: 942.50 KM',
         ],
         datasets: [{
@@ -75,7 +75,7 @@ new Chart(document.getElementById('annuallyLineChart'), {
     data: {
         labels: ["jan", "fev", "abr", "mar", "mai", "jun", "ago"],
         datasets: [{
-            label: 'Balance',
+            label: 'Billed',
             data: [105, 121, 94, 81, 106, 112, 100],
             color: '#fff',
             borderColor: '#31db31',
@@ -83,7 +83,7 @@ new Chart(document.getElementById('annuallyLineChart'), {
             tension: 0.4
             
         } , {
-            label: 'Expense',
+            label: 'Expensed',
             data: [24, 32, 58, 12, 70, 31, 12],
             borderColor: '#d44232',
             backgroundColor: '#d44232',
