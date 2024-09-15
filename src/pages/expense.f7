@@ -11,8 +11,8 @@
         </div>
         <div class="title">${currentExpense.title}</div>
         <div class="right">
-          <a href="#" class="btn-circle btn-edit"><div class="f7-icons">pencil</div></a>
-          <a href="#" class="btn-circle btn-del"><div class="f7-icons">trash</div></a>
+          <a href="#" class="btn-edit f7-icons">pencil</a>
+          <a href="#" data-id="${currentExpense.id}" @click="${deleteDialog}" class="btn-delete f7-icons">trash</a>
         </div>
       </div>
     </div>
@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-  export default (props, { $f7route, $store }) => {
+  export default (props, { $f7, $f7router, $f7route, $store }) => {
     const expenses = $store.getters.expenses;
     const expenseId = $f7route.params.id;
     let currentExpense;
@@ -36,6 +36,17 @@
         currentExpense = expense;
       }
     });
+
+    const deleteDialog = (e) => {
+      const id = $(e.target).attr('data-id');
+      
+      
+      $f7.dialog.confirm("Are you sure?", function() {
+        $store.dispatch('removeExpense', id);
+        $f7.dialog.alert('Expense Deleted!');
+        $f7router.back(); //navigate back
+      });
+    };
 
     return $render;
   };

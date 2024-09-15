@@ -18,11 +18,6 @@
       </div>
     </div>
 
-    <div class="fab fab-right-bottom">
-      <a href="#">
-        <i class="icon f7-icons" style="color: #222;">plus</i>
-      </a>
-    </div>
 
     <!-- Scrollable page content-->
     <div class="page-content">
@@ -32,7 +27,7 @@
       <div class="block welcome">
             <h2>Welcome to Driver Stats!</h2>
             <p>This app is designed to help you track and analyze your driver's performance.</p>
-            <a href="#view-registry-list" class="button button-fill button-raised" style="padding: 20px;">Start Tracking</a>
+            <a href="#" class="button button-fill button-raised" style="padding: 20px;">Start Tracking</a>
       </div>
 
       <div class="block-title">Hello, <span>Arthur</span>!</div>
@@ -87,49 +82,28 @@
               <th class="numeric-cell">#</th>
               <th class="numeric-cell">Created</th>
               <th class="numeric-cell">Closed</th>
+              <th class="numeric-cell">Trips</th>
               <th class="numeric-cell">Billed (R$)</th>
-              <th class="numeric-cell">Expensed (R$)</th>
               <th class="numeric-cell">Mileage (KM)</th>
               <th class="button-cell">Details</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="numeric-cell">1</td>
-              <td class="numeric-cell">13/09/2024 13:22</td>
-              <td class="numeric-cell">13/09/2024 20:22</td>
-              <td class="numeric-cell">124.95</td>
-              <td class="numeric-cell">45.23</td>
-              <td class="numeric-cell">112.23</td>
-              <td class="button-cell"><a class="button button-fill">+</a></td>
-            </tr>
-            <tr>
-              <td class="label-cell">2</td>
-              <td class="numeric-cell">12/09/2024 13:12</td>
-              <td class="numeric-cell">12/09/2024 21:13</td>
-              <td class="numeric-cell">132.12</td>
-              <td class="numeric-cell">52.24</td>
-              <td class="numeric-cell">146.52</td>
-              <td class="button-cell"><a class="button button-fill">+</a></td>
-            </tr>
-            <tr>
-              <td class="label-cell">3</td>
-              <td class="numeric-cell">11/09/2024 12:25</td>
-              <td class="numeric-cell">11/09/2024 18:15</td>
-              <td class="numeric-cell">165.52</td>
-              <td class="numeric-cell">12.00</td>
-              <td class="numeric-cell">100.25</td>
-              <td class="button-cell"><a class="button button-fill">+</a></td>
-            </tr>
-            <tr>
-              <td class="label-cell">4</td>
-              <td class="numeric-cell">10/09/2024 13:24</td>
-              <td class="numeric-cell">10/09/2024 20:11</td>
-              <td class="numeric-cell">125.23</td>
-              <td class="numeric-cell">23.02</td>
-              <td class="numeric-cell">129.52</td>
-              <td class="button-cell"><a class="button button-fill">+</a></td>
-            </tr>
+            ${registries.value.map((registry) => {
+              registryTableIndex++;
+              const mileage = registry.finalMileage - registry.initialMileage;
+              return $h`
+              <tr>
+                <td class="numeric-cell">${registryTableIndex}</td>
+                <td class="numeric-cell">${registry.createdAt}</td>
+                <td class="numeric-cell">${registry.closedAt}</td>
+                <td class="numeric-cell">${registry.trips}</td>
+                <td class="numeric-cell">${registry.billed}</td>
+                <td class="numeric-cell">${mileage}</td>
+                <td class="button-cell"><a href="/registry/${registry.id}/" class="button button-fill">+</a></td>
+              </tr>
+            `
+            })}
           </tbody>
         </table>
         <div class="data-table-footer">
@@ -161,7 +135,12 @@
 </template>
 
 <script>
-export default () => {
+export default (props, { $f7, $store }) => {
+    const registries = $store.getters.registries;
+    var registryTableIndex = 0;
+
+
+
   return $render;
 }
 </script>

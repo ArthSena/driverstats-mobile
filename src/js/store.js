@@ -1,5 +1,6 @@
 
 import { createStore } from 'framework7';
+import {v4 as uuidv4} from 'uuid';
 
 const store = createStore({
   state: {
@@ -92,6 +93,22 @@ const store = createStore({
     addExpense({ state }, expense) {
       state.expenses = [...state.expenses, expense];
     },
+    addCategory({ state }, name) {
+      state.categories = [...state.categories, {
+        id: uuidv4(),
+        name
+      }];
+    },
+    
+    removeRegistry({ state }, registryId) {
+      state.registries = state.registries.filter((registry) => registry.id!== registryId);
+    },
+    removeExpense({ state }, expenseId) {
+      state.expenses = state.expenses.filter((expense) => expense.id!== expenseId);
+    },
+    removeCategory({ state }, name) {
+      state.categories = state.categories.filter((category) => category.name!== name);
+    }
   },
 })
 export default store;

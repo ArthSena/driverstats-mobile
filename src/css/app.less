@@ -27,7 +27,7 @@
 }
 
 .m-bottom {
-  margin-bottom: 220px;	
+  margin-bottom: 150px;	
 }
 .color-green {
   color: var(--green);
@@ -171,35 +171,9 @@
   }
 }
 
-.btn-circle {
-  border-radius: 50%;
-  width: 15px;
-  height: 15px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--black2);
-}
 
-.btn-edit:hover {
-  background: #002330;
-}
 
-.btn-edit .f7-icons {
-  color: #00ace9;
-  font-size: 22px;
-}
 
-.btn-del:hover {
-  background: #441510;
-}
-
-.btn-del .f7-icons {
-  color: #d44232;
-  font-size: 22px;
-
-}
 
 .registry-status {
   width: 70px;
@@ -229,6 +203,7 @@
   border-radius: 50%;
   padding: 2px;
 }
+
 .btn-add:active {
   background: #404040;
   color: #829708;
@@ -241,4 +216,47 @@
 .button.button-fill:active {
   background: #829708;
   color: var(--black)
+}
+
+.btn-delete {
+  border-radius: 50%;
+  padding: 5px;
+  font-size: 22px;
+  margin-right: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d44232;
+}
+.btn-delete:hover {
+  background: #6b2119;
+}
+.btn-delete:active {
+  background: #3d130e;
+}
+
+.navbar .btn-delete {
+  color: #d44232;
+}
+
+.btn-edit {
+  border-radius: 50%;
+  padding: 5px;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00ace9;
+}
+.btn-edit:hover {
+  background: #005675;
+}
+.btn-edit:active {
+  background: #003d53;
+}
+
+.navbar .btn-edit {
+  color: #00ace9;
 }

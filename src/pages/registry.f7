@@ -11,8 +11,8 @@
         </div>
         <div class="title">${currentRegistry.title}</div>
         <div class="right">
-          <a href="#" class="btn-circle btn-edit"><div class="f7-icons">pencil</div></a>
-          <a href="#" class="btn-circle btn-del"><div class="f7-icons">trash</div></a>
+          <a href="#" class="btn-edit f7-icons">pencil</a>
+          <a href="#" data-id="${currentRegistry.id}" @click="${deleteDialog}"class="btn-delete f7-icons">trash</a>
         </div>
       </div>
     </div>
@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-  export default (props, { $f7route, $store }) => {
+  export default (props, { $f7, $f7route, $f7router, $store }) => {
     const registries = $store.getters.registries;
     const registryId = $f7route.params.id;
     let currentRegistry;
@@ -34,6 +34,17 @@
         currentRegistry = registry;
       }
     });
+
+    const deleteDialog = (e) => {
+      const id = $(e.target).attr('data-id');
+      
+      
+      $f7.dialog.confirm("Are you sure?", function() {
+        $store.dispatch('removeRegistry', id);
+        $f7.dialog.alert('Registry Deleted!');
+        $f7router.back(); //navigate back
+      });
+    };
 
     return $render;
   };

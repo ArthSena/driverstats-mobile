@@ -61,7 +61,7 @@
     
     <div class="block-title categories">
       Expense Categories 
-      <a href="#" class="btn-add"><i class="f7-icons">plus</i></a>
+      <a href="#" @click="${addDialog}" class="btn-add f7-icons">plus</a>
     </div>
     <div class="block">
 
@@ -72,6 +72,9 @@
             <a class="item-content item-link" href="#">
               <div class="item-inner">
                 <div class="item-title">${category.name}</div>
+
+                <div><a href="#" data-name="${category.name}" @click="${deleteDialog}" class="btn-delete f7-icons">trash</a></div>
+
               </div>
             </a>
           </li>
@@ -80,12 +83,32 @@
       </div>
 
     </div>
+    <div class="m-bottom"></div>
+
   </div>
 </div>
 </template>
 <script>
-  export default (props, { $store }) => {
+  export default (props, { $f7, $store }) => {
     const categories = $store.getters.categories;
+
+    const deleteDialog = (e) => {
+      const name = $(e.target).attr('data-name');
+
+      $f7.dialog.confirm("Are you sure?", function() {
+        $store.dispatch('removeCategory', name);
+        $f7.dialog.alert(name + ' Deleted!');
+      });
+    };
+
+    const addDialog = (e) => {
+      $f7.dialog.prompt('What is name of the category?', function(name) {
+        $f7.dialog.alert('Ok, created category: ' + name + "!");
+        $store.dispatch('addCategory', name);
+
+      });
+    }
+
     return $render;
   }
 </script>

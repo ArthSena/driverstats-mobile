@@ -11,7 +11,7 @@
             <i class="icon f7-icons">chart_bar_fill</i>
             <span class="tabbar-label">Home</span>
           </a>
-          <a href="#view-registry-list" class="tab-link">
+          <a href="#view-registry-list" data-name="registry-list" class="tab-link">
             <i class="icon f7-icons">square_list_fill</i>
             <span class="tabbar-label">Registries</span>
           </a>

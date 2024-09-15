@@ -37,6 +37,11 @@ var routes = [
   {
     path: '/profile/',
     component: ProfilePage,
+    on: {
+      pageInit: function (event, page) {
+        $.getScript("js/profile.js");
+      },
+    }
   },
   {
     path: '(.*)',
