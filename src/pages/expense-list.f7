@@ -30,7 +30,7 @@
               <div class="item-inner">
                 <div class="item-title"> <span style="color: #d44232;">-${expense.amount} R$</span> ~ ${expense.description}</div>
                 <div>
-                  ${expense.date}
+                  ${expense.date.toLocaleString()}
                 </div>
               </div>
             </a>

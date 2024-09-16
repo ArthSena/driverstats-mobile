@@ -19,17 +19,19 @@
       
       <div class="list list-strong list-dividers-ios list-outline-ios inset-md">
         <ul>
-          ${registries.value.map((registry) => $h`
+          ${registries.value.map((registry) => {
+            const closedAt = registry.closedAt ? registry.closedAt.toLocaleString() : undefined;
+            return $h`            
           <li>
             <a class="item-content item-link" href="/registry/${registry.id}/">
               <div class="item-inner">
-                <div class="registry-item-title">${registry.createdAt} - ${registry.closedAt}</div>
+                <div class="registry-item-title">${registry.createdAt.toLocaleString()} - ${closedAt}</div>
                 <span class="badge registry-status ${registry.status}"> ${registry.status}</span>
 
               </div>
             </a>
           </li>
-          `)}
+          `})}
         </ul>
       </div>
 

@@ -1,5 +1,6 @@
 
 import HomePage from '../pages/home.f7';
+import HomeChart from '../js/home.js';
 import RegistryListPage from '../pages/registry-list.f7';
 import RegistryPage from '../pages/registry.f7';
 import ExpenseListPage from '../pages/expense-list.f7';
@@ -8,13 +9,16 @@ import ProfilePage from '../pages/profile.f7';
 
 import NotFoundPage from '../pages/404.f7';
 
+import store from '../js/store.js';
+
 var routes = [
   {
     path: '/',
     component: HomePage,
     on: {
       pageInit: function (event, page) {
-        $.getScript("js/home.js");
+
+          new HomeChart(store);
       },
     }
   },

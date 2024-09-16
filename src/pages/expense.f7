@@ -19,7 +19,7 @@
     <div class="page-content">
       <div class="block-title">About: ${currentExpense.description} </div>
       <div class="block">
-        <p>Date: ${currentExpense.date}</p>
+        <p>Date: ${currentExpense.date.toLocaleString()}</p>
         <p>Category: ${currentExpense.category}</p>
         <p>Amount: ${currentExpense.amount}</p>
       </div>
@@ -40,11 +40,10 @@
     const deleteDialog = (e) => {
       const id = $(e.target).attr('data-id');
       
-      
       $f7.dialog.confirm("Are you sure?", function() {
         $store.dispatch('removeExpense', id);
         $f7.dialog.alert('Expense Deleted!');
-        $f7router.back(); //navigate back
+        $f7router.back();
       });
     };
 
