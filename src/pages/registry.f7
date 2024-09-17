@@ -11,40 +11,207 @@
         </div>
         <div class="title">${currentRegistry.title}</div>
         <div class="right">
-          <a href="#" class="btn-edit f7-icons">pencil</a>
           <a href="#" data-id="${currentRegistry.id}" @click="${deleteDialog}"class="btn-delete f7-icons">trash</a>
         </div>
       </div>
     </div>
     <div class="page-content">
-      <div class="block-title">About ${currentRegistry.createdAt} - ${currentRegistry.closedAt} </div>
-      <div class="block">
-        ${currentRegistry.createdAt}
+      <div class="block-title">About ${createdAt} - ${closedAt} </div>
+      <div class="">
+        <div class="list list-strong-ios list outline-ios list-dividers-ios">
+          <ul>
+            <li>
+              <a class="item-content ">
+                <div class="item-inner">
+                  <div class="item-title" style="color: #fff;">Id:</div>
+                  <span class="item-span disabled">${currentRegistry.id}</span>  
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="item-content">
+                <div class="item-inner">
+                  <div class="item-title" style="color: #fff;">Created At:</div>
+                  <span class="item-span disabled">${createdAt}</span>  
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="item-content">
+                <div class="item-inner">
+                  <div class="item-title" style="color: #fff;">Closed At:</div>
+                  <span class="item-span disabled">${closedAt}</div>  
+                </div>
+              </a>
+            </li>
+            <li>
+              ${(currentRegistry.state == "CLOSED") ? $h` 
+                <a class="item-content item-link" href="#" @click="${editInitialMileage}">
+                  <div class="item-inner">
+                    <div class="item-title">Initial Mileage:</div>
+                    <span class="item-span">${initialMileage}</span>  
+                  </div>
+                </a>
+              ` : $h`
+                <a class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title" style="color: #fff;">Initial Mileage:</div>
+                    <span class="item-span disabled">${initialMileage}</span>  
+                  </div>
+                </a>
+              `}
+
+            </li>
+            <li>
+              <a class="item-content item-link" href="#" @click="${editFinalMileage}">
+                <div class="item-inner">
+                  <div class="item-title">Final Mileage:</div>
+                  <span class="item-span">${finalMileage}</span>  
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="item-content item-link" href="#" @click="${editBilled}">
+                <div class="item-inner">
+                  <div class="item-title">Billed:</div>
+                  <span class="item-span">${billed}</span>  
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="item-content item-link" href="#" @click="${editTrips}">
+                <div class="item-inner">
+                  <div class="item-title">Trips:</div>
+                  <span class="item-span">${trips}</span>  
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="item-content" style="color: #fff;">
+                <div class="item-inner">
+                  <div class="item-title">State:</div>
+                  <span class="item-span disabled">${currentRegistry.state}</span>  
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+        ${(currentRegistry.state != "CLOSED") ? $h` 
+          <div>
+            <a href="#" @click="${closeRegistry}" data-id="${currentRegistry.id}" class="button button-fill button-raised button-large">Close</a>
+          </div>
+        ` : $h` 
+          <div style="margin-bottom: 15px;">
+            <a href="#" @click="${updateRegistry}" data-id="${currentRegistry.id}" class="button button-fill button-raised button-large">Update</a>
+          </div>    
+          <div>
+            <a href="#" @click="${reopenRegistry}" data-id="${currentRegistry.id}" class="button button-fill button-raised button-large">Re-Open</a>
+          </div>
+        `}
+        
       </div>
     </div>
   </div>
 </template>
 <script>
-  export default (props, { $f7, $f7route, $f7router, $store }) => {
+  import Home from "../js/Home.js";
+
+  export default (props, { $f7, $f7route, $f7router, $store, $update }) => {
     const registries = $store.getters.registries;
     const registryId = $f7route.params.id;
     let currentRegistry;
-    registries.value.forEach((registry) => {
-      if (registry.id === registryId) {
-        currentRegistry = registry;
-      }
-    });
+    registries.value.forEach((registry) => { if (registry.id === registryId) currentRegistry = registry; });
+
+    const createdAt =  new Date(currentRegistry.createdAt).toLocaleString();
+    const closedAt = currentRegistry.closedAt ? new Date(currentRegistry.closedAt).toLocaleString() : undefined;
+
+    var initialMileage = currentRegistry.initialMileage;
+    var billed = currentRegistry.billed;
+    var finalMileage = currentRegistry.finalMileage;
+    var trips = currentRegistry.trips;
+
+    const editTrips = (e) => {
+      $f7.dialog.prompt('New trip amount:', (amount) => {
+        if (isNaN(amount) || amount < 0) { editTrips(e); return; }
+        trips = parseInt(amount);
+        $update();
+      });
+    }
+
+    const editBilled = (e) => {
+      $f7.dialog.prompt('New billed amount:', (amount) => {
+        if (isNaN(amount) || amount < 0) { editBilled(e); return; }
+        billed = parseFloat(amount);
+        $update();
+      });
+    }
+
+    const editFinalMileage = (e) => {
+      $f7.dialog.prompt('New final mileage amount:', (amount) => {
+        if (isNaN(amount) || amount < 0) { editFinalMileage(e); return; }
+        finalMileage = parseFloat(amount);
+        $update();
+      });
+    }
+
+    const editInitialMileage = (e) => {
+      $f7.dialog.prompt('New initial mileage amount:', (amount) => {
+        if (isNaN(amount) || amount < 0) { editInitialMileage(e); return; }
+        initialMileage = parseFloat(amount);
+        $update();
+      });
+    }
 
     const deleteDialog = (e) => {
       const id = $(e.target).attr('data-id');
-      
-      
-      $f7.dialog.confirm("Are you sure?", function() {
-        $store.dispatch('removeRegistry', id);
-        $f7.dialog.alert('Registry Deleted!');
-        $f7router.back(); //navigate back
+      $f7.dialog.confirm("Are you sure?", () => {
+        $store.dispatch('deleteRegistry', id)
+        .then(() => {
+          Home($store).then(() => {});
+          $f7.dialog.alert('Registry Deleted!');
+          $f7router.back(); //navigate back
+        });
       });
     };
+
+    var isClicked = false;
+
+    const closeRegistry = (e) => {
+      if(isClicked) return;
+      isClicked = true;
+      const id = $(e.target).attr('data-id');
+      $store.dispatch('closeRegistry', {id, billed, finalMileage, trips})
+      .then(() => {
+        Home($store).then(() => isClicked = false);
+        $f7.dialog.alert('Registry Closed!');
+        $f7router.back(); //navigate back
+      })
+    }
+
+    const updateRegistry = (e) => {
+      if(isClicked) return;
+      isClicked = true;
+      const id = $(e.target).attr('data-id');
+      $store.dispatch('updateRegistry', {id, billed, initialMileage, finalMileage, trips})
+      .then(() => {
+        Home($store).then(() => isClicked = false);
+        $f7.dialog.alert('Registry Updated!');
+      })
+    }
+
+    const reopenRegistry = (e) => {
+      if(isClicked){
+        $f7.dialog.alert('An update is occurring now, please try again!');
+        return;
+      }
+      isClicked = true;
+      const id = $(e.target).attr('data-id');
+      $store.dispatch('reopenRegistry', {id, billed, initialMileage, finalMileage, trips})
+      .then(() => {
+        Home($store).then(() => isClicked = false);
+        $f7.dialog.alert('Registry Openned!');
+      })
+    }
 
     return $render;
   };

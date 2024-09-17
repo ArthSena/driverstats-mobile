@@ -10,7 +10,7 @@
     </div>
 
     <div class="fab fab-right-bottom">
-      <a href="#">
+      <a href="#" @click="${createRegistry}">
         <i class="icon f7-icons" style="color: #222;">plus</i>
       </a>
     </div>
@@ -20,13 +20,14 @@
       <div class="list list-strong list-dividers-ios list-outline-ios inset-md">
         <ul>
           ${registries.value.map((registry) => {
-            const closedAt = registry.closedAt ? registry.closedAt.toLocaleString() : undefined;
+            const createdAt =  new Date(registry.createdAt).toLocaleString();
+            const closedAt = registry.closedAt ? new Date(registry.closedAt).toLocaleString() : undefined;
             return $h`            
           <li>
             <a class="item-content item-link" href="/registry/${registry.id}/">
               <div class="item-inner">
-                <div class="registry-item-title">${registry.createdAt.toLocaleString()} - ${closedAt}</div>
-                <span class="badge registry-status ${registry.status}"> ${registry.status}</span>
+                <div class="registry-item-title">${createdAt} - ${closedAt}</div>
+                <span class="badge registry-status ${registry.state}"> ${registry.state}</span>
 
               </div>
             </a>
@@ -41,16 +42,25 @@
   </div>
 </template>
 <script>
-  export default (props, { $store }) => {
+  import Home from "../js/Home.js";
+
+  export default (props, { $f7, $f7router, $store }) => {
     const registries = $store.getters.registries;
 
-    const addProduct = () => {
-      $store.dispatch('addProduct', {
-        id: '4',
-        title: 'Apple iPhone 12',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi tempora similique reiciendis, error nesciunt vero, blanditiis pariatur dolor, minima sed sapiente rerum, dolorem corrupti hic modi praesentium unde saepe perspiciatis.'
+    const createRegistry = (e) => {
+      $f7.dialog.prompt('Type the initial mileage', (amount) => {
+        if (isNaN(amount) || amount < 0) { createRegistry(e); return; }
+        const initialMileage = parseFloat(amount);
+        $store.dispatch('createRegistry', { initialMileage })
+        .then((registry) => {
+          console.log('/registry/' + registry.id + '/')
+          Home($store).then(() => $f7router.navigate('/registry/' + registry.id + '/'));
+          $f7.dialog.alert('Registry Created!');
+          
+        })
       });
     }
+
 
     return $render;
   }

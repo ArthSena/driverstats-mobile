@@ -1,6 +1,5 @@
 
 import HomePage from '../pages/home.f7';
-import HomeChart from '../js/home.js';
 import RegistryListPage from '../pages/registry-list.f7';
 import RegistryPage from '../pages/registry.f7';
 import ExpenseListPage from '../pages/expense-list.f7';
@@ -9,18 +8,18 @@ import ProfilePage from '../pages/profile.f7';
 
 import NotFoundPage from '../pages/404.f7';
 
-import store from '../js/store.js';
+import Home from '../js/home.js'
+import store from '../lib/store.js';
 
 var routes = [
   {
     path: '/',
     component: HomePage,
-    on: {
-      pageInit: function (event, page) {
-
-          new HomeChart(store);
-      },
-    }
+    // on: {
+    //   pageInit: function (event, page) {
+    //     new Home(store);
+    //   },
+    // }
   },
   {
     path: '/registry-list/',
@@ -41,11 +40,6 @@ var routes = [
   {
     path: '/profile/',
     component: ProfilePage,
-    on: {
-      pageInit: function (event, page) {
-        $.getScript("js/profile.js");
-      },
-    }
   },
   {
     path: '(.*)',

@@ -34,19 +34,27 @@
       <div class="block card-flex">
         <div class="card">
           <div class="card-header">Trips</div>
-          <div class="card-content">${cardTrips}<span class="card-${getCardPercentageColor(cardTripsPercentage)}">(${cardTripsPercentage}%)</span></div>
+          <div class="card-content">
+            <div id="card-trips"></div>
+            <span id="card-trips-percentage">(0%)</span></div>
         </div>
         <div class="card">
           <div class="card-header">Billed (R$)</div>
-          <div class="card-content">${cardBilled}<span class="card-${getCardPercentageColor(cardBilledPercentage)}">(${cardBilledPercentage}%)</span></div>
+          <div class="card-content">
+            <div id="card-billed"></div>
+            <span id="card-billed-percentage">(0%)</span></div>
         </div>
         <div class="card">
           <div class="card-header">Expensed (R$)</div>
-          <div class="card-content">${cardExpensed}<span class="card-${getCardPercentageColor(cardExpensedPercentage)}">(${cardExpensedPercentage}%)</span></div>
+          <div class="card-content">
+            <div id="card-expensed"></div>
+            <span id="card-expensed-percentage">(0%)</span></div>
         </div>
         <div class="card">
           <div class="card-header">Mileage (KM)</div>
-          <div class="card-content">${cardMilleage}<span class="card-${getCardPercentageColor(cardMilleagePercentage)}">(${cardMilleagePercentage}%)</span></div>
+          <div class="card-content">
+            <div id="card-mileage"></div>
+            <span id="card-mileage-percentage">(0%)</span></div>
         </div>
       </div>
 
@@ -134,79 +142,10 @@
     </div>
   </div>
 </template>
-
 <script>
-  export default (props, { $f7, $store }) => {
+export default (props, { $f7, $store, $on, $onMounted }) => {
     const registries = $store.getters.registries;
-    const expenses = $store.getters.expenses;
     var registryTableIndex = 0;
-
-    var cardTrips = 0;
-    var cardBilled = 0;
-    var cardExpensed = 0;
-    var cardMilleage = 0;
-
-    const oneMonthAgo = new Date();
-    const twoMonthsAgo = new Date();
-
-    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-    twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
-
-    // Filter registries from one month ago
-    const filteredRegistries = registries.value.filter((registry) => { return registry.createdAt >= oneMonthAgo; });
-
-    filteredRegistries.forEach((registry) => {
-        cardTrips += registry.trips;
-        cardBilled += registry.billed;
-        cardMilleage += registry.finalMileage - registry.initialMileage;
-    });
-
-    const filteredExpenses = expenses.value.filter((expense) => { return expense.date >= oneMonthAgo; });
-
-    filteredExpenses.forEach((expense) => {
-      cardExpensed += expense.amount;
-    });
-
-    // Calculate the percentages
-    const filteredRegistriesTwoMonths = registries.value.filter((registry) => { return registry.createdAt >= twoMonthsAgo && registry.createdAt <= oneMonthAgo; });
-
-    let totalTripsTwoMonths = 0;
-    let totalBilledTwoMonths = 0;
-    let totalMilleageTwoMonths = 0;
-
-    filteredRegistriesTwoMonths.forEach((registry) => {
-      totalTripsTwoMonths += registry.trips;
-      totalBilledTwoMonths += registry.billed;
-      totalMilleageTwoMonths += registry.finalMileage - registry.initialMileage;
-    });
-
-    let totalExpensedTwoMonths = 0;
-
-    const filteredExpensesTwoMonths = expenses.value.filter((expense) => { return expense.createdAt >= twoMonthsAgo && expense.createdAt <= oneMonthAgo; });
-
-    if (filteredExpensesTwoMonths.length > 0) {
-      totalExpensedTwoMonths = filteredExpensesTwoMonths.reduce((total, expense) => total + expense.amount, 0);
-    }
-
-    const cardTripsPercentage = (totalTripsTwoMonths > 0) ? new Intl.NumberFormat(undefined, {minimumFractionDigits: 2}).format((cardTrips / totalTripsTwoMonths) * 100) : 0;
-    const cardBilledPercentage = (totalBilledTwoMonths > 0) ? new Intl.NumberFormat(undefined, {minimumFractionDigits: 2}).format((cardBilled / totalBilledTwoMonths) * 100) : 0;
-    const cardMilleagePercentage = (totalMilleageTwoMonths > 0) ? new Intl.NumberFormat(undefined, {minimumFractionDigits: 2}).format((cardMilleage / totalMilleageTwoMonths) * 100) : 0;
-
-    const cardExpensedPercentage = (totalExpensedTwoMonths > 0) ? new Intl.NumberFormat(undefined, {minimumFractionDigits: 2}).format((cardExpensed / totalExpensedTwoMonths) * 100) : 0;
-
-    const getCardPercentageColor = (percentage) => {
-      if (parseFloat(percentage) > 0) {
-        return "positive";
-      } else if(parseFloat(percentage) == 0){
-        return "neutral";
-      } else {
-        return "negative";
-      }
-    }
-
-  return $render;
+    return $render;
 }
-
 </script>
-
-
