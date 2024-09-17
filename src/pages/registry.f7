@@ -71,6 +71,14 @@
               </a>
             </li>
             <li>
+              <a class="item-content">
+                <div class="item-inner">
+                  <div class="item-title" style="color: #fff;">Total Mileage:</div>
+                  <span class="item-span">${totalMileage}</span>  
+                </div>
+              </a>
+            </li>
+            <li>
               <a class="item-content item-link" href="#" @click="${editBilled}">
                 <div class="item-inner">
                   <div class="item-title">Billed:</div>
@@ -129,7 +137,8 @@
     var billed = currentRegistry.billed;
     var finalMileage = currentRegistry.finalMileage;
     var trips = currentRegistry.trips;
-
+    var totalMileage = finalMileage > initialMileage ? finalMileage - initialMileage : 0
+    ;
     const editTrips = (e) => {
       $f7.dialog.prompt('New trip amount:', (amount) => {
         if (isNaN(amount) || amount < 0) { editTrips(e); return; }
@@ -150,6 +159,8 @@
       $f7.dialog.prompt('New final mileage amount:', (amount) => {
         if (isNaN(amount) || amount < 0) { editFinalMileage(e); return; }
         finalMileage = parseFloat(amount);
+        if(finalMileage < initialMileage) finalMileage = finalMileage + initialMileage
+        totalMileage = finalMileage - initialMileage;
         $update();
       });
     }
@@ -158,6 +169,7 @@
       $f7.dialog.prompt('New initial mileage amount:', (amount) => {
         if (isNaN(amount) || amount < 0) { editInitialMileage(e); return; }
         initialMileage = parseFloat(amount);
+        totalMileage = finalMileage > initialMileage ? finalMileage - initialMileage : 0
         $update();
       });
     }
@@ -210,6 +222,7 @@
       .then(() => {
         Home($store).then(() => isClicked = false);
         $f7.dialog.alert('Registry Openned!');
+        $f7router.back(); //navigate back
       })
     }
 

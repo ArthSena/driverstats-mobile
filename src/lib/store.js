@@ -37,6 +37,7 @@ const store = createStore({
         });
         const data = await res.json();
         store.dispatch('setAuth', data);
+        
         store.dispatch('getRegistries');
         store.dispatch('getExpenses');
         store.dispatch('getCategories');
@@ -53,12 +54,51 @@ const store = createStore({
         state.expenses = data.list;
       })
     },
+
+    // CATEGORY
     getCategories({ state }) {
       fetch('http://localhost:8080/v1/category/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }})
       .then((res) => res.json())
       .then((data) => {
         state.categories = data.list;
       })
+    },
+    async createCategory({ state }, name ) {
+      try {
+        const res = await fetch(`http://localhost:8080/v1/category`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Token '+ store.state.auth.token },
+          body: JSON.stringify({ name })
+        })
+        store.dispatch('getCategories');
+        const data = await res.json();
+        return data;
+      } catch (error) {
+        console.log('Error:', err);
+      }
+    },
+    async updateCategory({ state }, { id, name }) {
+      try {
+        await fetch(`http://localhost:8080/v1/category/${id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Token '+ store.state.auth.token },
+          body: JSON.stringify({ name })
+        })
+        store.dispatch('getCategories');
+      } catch (error) {
+        console.log('Error:', err);
+      }
+    },
+    async deleteCategory({ state }, id) {
+      try {
+        await fetch(`http://localhost:8080/v1/category/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Token ' + store.state.auth.token }
+        })
+        store.dispatch('getCategories');
+      } catch (error) {
+        console.log('Error:', err);
+      }
     },
 
     // REGISTRY //
@@ -79,6 +119,17 @@ const store = createStore({
         store.dispatch('getRegistries');
         const data = await res.json();
         return data;
+      } catch (error) {
+        console.log('Error:', err);
+      }
+    },
+    async reopenRegistry({ state }, {id}) {
+      try {
+        await fetch(`http://localhost:8080/v1/registry/${id}/reopen`, {
+          method: 'POST',
+          headers: { 'Authorization': 'Token '+ store.state.auth.token }
+        })
+        store.dispatch('getRegistries');
       } catch (error) {
         console.log('Error:', err);
       }

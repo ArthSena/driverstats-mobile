@@ -8,17 +8,9 @@
     </div>
 
     <div class="fab fab-right-bottom">
-      <a href="#" class="color-red" style="color: #222;">
-        <!-- First icon is visible when Speed Dial actions are closed -->
-        <i class="icon f7-icons">plus</i>
-        <!-- Second icon is visible when Speed Dial actions are opened -->
-        <i class="icon f7-icons">xmark</i>
+      <a href="/expense-new/" class="color-red">
+        <i class="icon f7-icons" style="color: #222;">plus</i>
       </a>
-      <!-- Speed Dial action buttons -->
-      <div class="fab-buttons fab-buttons-top">
-        <a href="#" class="color-red" style="color: #222;"><i class="icon f7-icons">money_dollar</i></a>
-        <a href="#" class="color-red" style="color: #222;"><i class="icon f7-icons">tag</i></a>
-      </div>
     </div>
 
     <div class="page-content">
@@ -48,6 +40,11 @@
 <script>
   export default (props, { $store }) => {
     const expenses = $store.getters.expenses;
+
+    const createExpense = (e) => {
+
+    }
+
     return $render;
   }
 </script>

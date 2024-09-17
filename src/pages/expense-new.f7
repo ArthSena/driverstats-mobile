@@ -1,0 +1,32 @@
+<template>
+    <div class="page" data-name="registry">
+      <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner sliding">
+            <div class="left">
+                <a href="#" class="link back">
+                  <i class="icon icon-back"></i>
+                  <span>Back</span>
+                </a>
+            </div>
+          <div class="title">New Expense</div>
+        </div>
+      </div>
+  
+      <div class="page-content">
+
+        
+        <div class="m-bottom"></div>
+  
+      </div>
+      
+    </div>
+  </template>
+  <script>
+    export default (props, { $store }) => {
+  
+
+      return $render;
+    }
+  </script>
+  

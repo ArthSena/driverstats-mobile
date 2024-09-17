@@ -47,7 +47,7 @@
             </div>
           </div>
         </li>
-        <li style="margin-top: 30px">
+        <li style="margin-top: 30px; padding-bottom: 30px;">
           <div class="item-content item-input">
             <div class="item-inner">
               <div class="item-input-wrap">
@@ -61,7 +61,7 @@
     
     <div class="block-title categories">
       Expense Categories 
-      <a href="#" @click="${addDialog}" class="btn-add f7-icons">plus</a>
+      <a href="#" @click="${createCategory}" class="btn-add f7-icons">plus</a>
     </div>
     <div class="block">
 
@@ -69,12 +69,10 @@
         <ul>
           ${categories.value.map((category) => $h`
           <li>
-            <a class="item-content item-link" href="#">
-              <div class="item-inner">
-                <div class="item-title">${category.name}</div>
-
-                <div><a href="#" data-name="${category.name}" @click="${deleteDialog}" class="btn-delete f7-icons">trash</a></div>
-
+            <div class="item-content item-link">
+              <div class="item-inner" data-id="${category.id}" @click="${updateCategory}" c>
+                <div lass="item-link">${category.name}</div>
+                <a href="#" data-id="${category.id}" @click="${deleteCategory}" class="btn-delete f7-icons">trash</a>
               </div>
             </a>
           </li>
@@ -89,26 +87,44 @@
 </div>
 </template>
 <script>
-  export default (props, { $f7, $store }) => {
+  export default (props, { $f7, $f7router, $store }) => {
     const categories = $store.getters.categories;
 
-    const deleteDialog = (e) => {
-      const name = $(e.target).attr('data-name');
+    var isClicked = false;
 
-      $f7.dialog.confirm("Are you sure?", function() {
-        $store.dispatch('removeCategory', name);
+    const deleteCategory = (e) => {
+      if(isClicked) return;
+      isClicked = true;
+      const id = $(e.target).attr('data-id');
+      $f7.dialog.confirm("Are you sure to delete?", function() {
+        $store.dispatch('deleteCategory', id)
+        .then(() => isClicked = false);
         $f7.dialog.alert(name + ' Deleted!');
-      });
-    };
+      }, () => isClicked = false);
+    }
 
-    const addDialog = (e) => {
+    const createCategory = (e) => {
       $f7.dialog.prompt('What is name of the category?', function(name) {
-        $f7.dialog.alert('Ok, created category: ' + name + "!");
-        $store.dispatch('addCategory', name);
-
+        $store.dispatch('createCategory', name)
+        .then(() => {
+          $f7.dialog.alert('Ok, created category: ' + name + "!");
+        });
       });
     }
 
+    const updateCategory = (e) => {
+      if(isClicked) return;
+      isClicked = true;
+      const id = $(e.target).attr('data-id');
+      $f7.dialog.prompt('What is the new name of this category?', function(name) {
+        $store.dispatch('updateCategory', { id, name })
+        .then(() => {
+          isClicked = false;
+          $f7.dialog.alert('Ok, now the name is: ' + name + "!");
+          $f7router.navigate('/profile/');
+        });
+      }, () => isClicked = false);
+    }
     return $render;
   }
 </script>

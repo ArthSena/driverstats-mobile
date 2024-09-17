@@ -3,23 +3,16 @@ import HomePage from '../pages/home.f7';
 import RegistryListPage from '../pages/registry-list.f7';
 import RegistryPage from '../pages/registry.f7';
 import ExpenseListPage from '../pages/expense-list.f7';
+import ExpenseNewPage from '../pages/expense-new.f7';
 import ExpensePage from '../pages/expense.f7';
 import ProfilePage from '../pages/profile.f7';
 
 import NotFoundPage from '../pages/404.f7';
 
-import Home from '../js/home.js'
-import store from '../lib/store.js';
-
 var routes = [
   {
     path: '/',
     component: HomePage,
-    // on: {
-    //   pageInit: function (event, page) {
-    //     new Home(store);
-    //   },
-    // }
   },
   {
     path: '/registry-list/',
@@ -32,6 +25,10 @@ var routes = [
   {
     path: '/expense-list/',
     component: ExpenseListPage,
+  },
+  {
+    path: '/expense-new/',
+    component: ExpenseNewPage,
   },
   {
     path: '/expense/:id/',
