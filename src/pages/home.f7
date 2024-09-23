@@ -27,10 +27,10 @@
       <div class="block welcome">
             <h2>Welcome to Driver Stats!</h2>
             <p>This app is designed to help you track and analyze your driver's performance.</p>
-            <a href="#" class="button button-fill button-raised" style="padding: 20px;">Start Tracking</a>
+            <a href="#" @click="${startTracking}" class="button button-fill button-raised" style="padding: 20px;">Start Tracking</a>
       </div>
 
-      <div class="block-title">Hello, <span>Arthur</span>!</div>
+      <div class="block-title">Hello, <span id="username">User</span>!</div>
       <div class="block card-flex">
         <div class="card">
           <div class="card-header">Trips</div>
@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <div class="block-title">Monthly / Weekly Driver Statistics</div>
+      <div class="block-title">Monthly / Last 7 Days Statistics</div>
       <div class=" block charts">
         <div class="pie-chart">
           <canvas id="monthlyPieChart"></canvas>
@@ -68,72 +68,17 @@
         </div>
       </div>
 
-      <div class="block-title">Weekly Hour Worked Statistics</div>
+      <div class="block-title">Weekly Hours Worked Statistics</div>
       <div class="block charts">
         <div class="bar-chart">
           <canvas id="weeklyBarChart"></canvas>
         </div>
       </div>
 
-      <div class="block-title">Annually Driver Statistics</div>
+      <div class="block-title">Annually Statistics</div>
       <div class=" block charts">
         <div class="bar-chart">
           <canvas id="annuallyLineChart"></canvas>
-        </div>
-      </div>
-
-      <div class="block-title">Last Registries</div>
-      <div class="block data-table">
-        <table>
-          <thead>
-            <tr>
-              <th class="numeric-cell">#</th>
-              <th class="numeric-cell">Created</th>
-              <th class="numeric-cell">Closed</th>
-              <th class="numeric-cell">Trips</th>
-              <th class="numeric-cell">Billed (R$)</th>
-              <th class="numeric-cell">Mileage (KM)</th>
-              <th class="button-cell">Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${registries.value.map((registry) => {
-              registryTableIndex++;
-              const mileage = registry.finalMileage - registry.initialMileage;
-              const closedAt = registry.closedAt ? registry.closedAt.toLocaleString() : undefined;
-              return $h`
-              <tr>
-                <td class="numeric-cell">${registryTableIndex}</td>
-                <td class="numeric-cell">${registry.createdAt.toLocaleString()}</td>
-                <td class="numeric-cell">${closedAt}</td>
-                <td class="numeric-cell">${registry.trips}</td>
-                <td class="numeric-cell">${registry.billed}</td>
-                <td class="numeric-cell">${mileage}</td>
-                <td class="button-cell"><a href="/registry/${registry.id}/" class="button button-fill">+</a></td>
-              </tr>
-            `
-            })}
-          </tbody>
-        </table>
-        <div class="data-table-footer">
-          <div class="data-table-rows-select">Per page:<div class="input input-dropdown">
-              <select>
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="all">All</option>
-              </select>
-            </div>
-          </div>
-          <div class="data-table-pagination">
-            <span class="data-table-pagination-label">1-5 of 10</span>
-            <a href="#" class="link disabled">
-              <i class="icon icon-prev color-gray"></i>
-            </a>
-            <a href="#" class="link">
-              <i class="icon icon-next color-gray"></i>
-            </a>
-          </div>
         </div>
       </div>
 
@@ -143,8 +88,17 @@
   </div>
 </template>
 <script>
-export default (props, { $f7, $store, $on, $onMounted }) => {
+export default (props, { $f7, $f7router, $store }) => {
     const registries = $store.getters.registries;
+
+    $f7.on('login', (auth) => {
+      document.getElementById('username').innerHTML = auth.user.name;
+    })
+
+    const startTracking = (e) => {
+      $f7.tab.show("#view-registry-list")
+    };
+
     var registryTableIndex = 0;
     return $render;
 }

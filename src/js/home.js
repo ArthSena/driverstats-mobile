@@ -22,10 +22,10 @@ export default async (store) => {
     document.getElementById("card-expensed").innerHTML = data.oneMonthExpensed;
     document.getElementById("card-mileage").innerHTML = data.oneMonthMileage;
 
-    document.getElementById("card-trips-percentage").innerHTML = "(" + data.tripsPercentage + "%)";
-    document.getElementById("card-billed-percentage").innerHTML = "(" + data.billedPercentage + "%)";
-    document.getElementById("card-expensed-percentage").innerHTML = "(" + data.expensedPercentage + "%)";
-    document.getElementById("card-mileage-percentage").innerHTML = "(" + data.mileagePercentage + "%)";
+    document.getElementById("card-trips-percentage").innerHTML = data.tripsPercentage + "%";
+    document.getElementById("card-billed-percentage").innerHTML = data.billedPercentage + "%";
+    document.getElementById("card-expensed-percentage").innerHTML =  data.expensedPercentage + "%";
+    document.getElementById("card-mileage-percentage").innerHTML =  data.mileagePercentage + "%";
 
     document.getElementById("card-trips-percentage").classList.add(getCardPercentageClass(data.tripsPercentage));
     document.getElementById("card-billed-percentage").classList.add(getCardPercentageClass(data.billedPercentage));
@@ -158,7 +158,7 @@ const toDataSet = (registries, expenses) => {
 
         const registryDate = createdAt.toLocaleString().split(',')[0];
         dailyData[registryDate] = {
-            hoursWorked: (new Date(registry.closedAt) - createdAt) / (1000 * 60 * 60),
+            hoursWorked: registry.closedAt ? Math.abs(new Date(registry.closedAt).getTime() - createdAt.getTime()) / (1000 * 60 * 60) : 0,
             trips: registry.trips,
         }
 
@@ -172,12 +172,13 @@ const toDataSet = (registries, expenses) => {
                 billed: registry.billed,
                 trips: registry.trips,
                 mileage: registry.finalMileage != 0 ? registry.finalMileage - registry.initialMileage : 0,
+                expensed: 0,
             };
         }
     });
 
     expenses.forEach(expense => {
-        const date = new Date(registry.date);
+        const date = new Date(expense.date);
 
         if(date >= twoMonthsAgo && date <= oneMonthAgo) {
             twoMonthsExpensed += expense.amount;
@@ -190,18 +191,27 @@ const toDataSet = (registries, expenses) => {
         }
 
         const expenseMonth = date.toDateString().split(' ')[1];
-        if (monthlyData[expenseMonth].expensed) {
+        if (monthlyData[expenseMonth]) {
             monthlyData[expenseMonth].expensed += expense.amount;
         } else {
-            monthlyData[expenseMonth].expensed = expense.amount;
+            monthlyData[expenseMonth] = {
+                expensed: expense.amount,
+                billed: 0,
+                trips: 0,
+                mileage: 0
+            };
         }
     });
 
-    var tripsPercentage = twoMonthsTrips > 0 ? (oneMonthTrips / twoMonthsTrips) * 100 : 0;
-    var billedPercentage = twoMonthsBilled > 0 ?(oneMonthBilled / twoMonthsBilled) * 100 : 0;
-    var expensedPercentage = twoMonthsExpensed > 0 ? (oneMonthExpensed / twoMonthsExpensed) * 100 : 0;
-    var mileagePercentage = twoMonthsMileage > 0 ? (oneMonthMileage / twoMonthsMileage) * 100 : 0;
+    const calcPercentage = (x, y) => {
+        return (((x - y) / y) * 100);
+    }
 
+    var tripsPercentage = twoMonthsTrips > 0 ? calcPercentage(oneMonthTrips, twoMonthsTrips).toFixed(2) : 0;
+    var billedPercentage = twoMonthsBilled > 0 ? calcPercentage(oneMonthBilled, twoMonthsBilled).toFixed(2) : 0;
+    var expensedPercentage = twoMonthsExpensed > 0 ? calcPercentage(oneMonthExpensed, twoMonthsExpensed).toFixed(2) : 0;
+    var mileagePercentage = twoMonthsMileage > 0 ? calcPercentage(oneMonthMileage, twoMonthsMileage).toFixed(2) : 0;
+      
     return {
         tripsPercentage,
         billedPercentage,

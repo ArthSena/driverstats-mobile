@@ -15,6 +15,54 @@
   
       <div class="page-content">
 
+        <div class="block-title">Expense Settings</div>
+        <div class="list list-strong-ios list-dividers-ios list-outline-ios">
+          <ul>
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Description</div>
+                  <div class="item-input-wrap">
+                    <input id="description-field" type="text" placeholder="Gasoline" value=""/>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Amount</div>
+                  <div class="item-input-wrap">
+                    <input id="amount-field" type="number" placeholder="30.00" value="" />
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Category</div>
+                  <div class="item-input-wrap input-dropdown-wrap">
+                    <select id="category-field" placeholder="Please choose...">
+                      ${categories.value.map((category) => $h`
+                        <option value="${category.id}">${category.name}</option>
+                      `)}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li style="margin-top: 30px; padding-bottom: 30px;">
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input @click="${createExpense}" class="button button-fill button-large bg-color-red" type="submit" value="Create"/>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
         
         <div class="m-bottom"></div>
   
@@ -23,9 +71,39 @@
     </div>
   </template>
   <script>
-    export default (props, { $store }) => {
-  
+    import Home from "../js/Home.js";
 
+    export default (props, { $f7, $f7router, $store }) => {
+      const categories = $store.getters.categories;
+
+      var isClicked = false;
+      const createExpense = (e) => {
+        if(isClicked) return
+        isClicked = true;
+        const description = document.getElementById('description-field').value;
+        const amount = document.getElementById('amount-field').value;
+        const categoryId = document.getElementById('category-field').value;
+
+        $store.dispatch('createExpense', { description, amount, categoryId })
+        .then((expense) => {
+          if(expense.code) {
+            $f7.dialog.alert(expense.message);
+            isClicked = false;
+            return;
+          }
+
+          $f7router.navigate('/expense-list/', {reloadCurrent: true});
+          $f7.emit('refreshExpense');
+
+          Home($store).then(() => {
+            $f7router.navigate('/expense/' + expense.id + '/');
+            isClicked = false;
+          });
+
+          $f7.dialog.alert("Expense created successfully");
+        })
+      }
+      
       return $render;
     }
   </script>

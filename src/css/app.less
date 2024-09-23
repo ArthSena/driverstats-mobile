@@ -116,10 +116,21 @@
   font-size: 15px;
   color: #0f0;
 }
+.card-positive::before {  
+  font-family: "Helvetica Neue";
+  content: '+';
+  margin-right: 5px;
+}
+
 .card-neutral {
   font-weight: 600;
   font-size: 15px;
   color: #9e9e9e;
+}
+.card-neutral::before {  
+  font-family: "Helvetica Neue";
+  content: '~';
+  margin-right: 5px;
 }
 .card-negative {
   font-weight: 600;
@@ -270,4 +281,10 @@
 .item-span {
   font-size: 14px;
   color: #9e9e9e;
+}
+
+.item-inner.split {
+  color: var(--primary);
+  font-size: 12px;
+  align-items: flex-end;
 }

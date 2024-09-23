@@ -4,6 +4,9 @@
       <div class="navbar-bg"></div>
       <div class="navbar-inner sliding">
         <div class="title">Expenses</div>
+        <div class="right">
+          <a href="#" @click="${refresh}" class="item-link">Refresh</a>
+        </div>
       </div>
     </div>
 
@@ -13,38 +16,81 @@
       </a>
     </div>
 
-    <div class="page-content">
-      <div class="list list-strong list-dividers-ios list-outline-ios inset-md">
+    <div data-infinite-distance="50" class="page-content infinite-scroll-content" @infinite=${loadMore}>      
+      <div class="list list-strong list-dividers-ios list-outline-ios inset-md" style="margin-bottom: 150px;">
         <ul>
-          ${expenses.value.map((expense) => $h`
-          <li>
-            <a class="item-content item-link" href="/expense/${expense.id}/">
-              <div class="item-inner">
-                <div class="item-title"> <span style="color: #d44232;">-${expense.amount} R$</span> ~ ${expense.description}</div>
-                <div>
-                  ${expense.date.toLocaleString()}
-                </div>
-              </div>
-            </a>
-          </li>
-          `)}
+          ${items.map((expense) => {
+            const formatedDate = new Date(expense.date).toLocaleString();
+            return $h`
+              <li>
+                <a class="item-content item-link" href="/expense/${expense.id}/">
+                  <div class="item-inner">
+                    <div class="item-title"> <span style="color: #d44232;">-${expense.amount} R$</span> ~ ${expense.description}</div>
+                    <div>
+                      ${formatedDate}
+                    </div>
+                  </div>
+                </a>
+              </li>
+          `})}
         </ul>
+        ${loading ? $h`<div class="preloader infinite-scroll-preloader"></div>` : ''}
       </div>
-      
-      <div class="m-bottom"></div>
-
     </div>
     
   </div>
 </template>
 <script>
-  export default (props, { $store }) => {
-    const expenses = $store.getters.expenses;
+  import Home from "../js/Home.js";
 
-    const createExpense = (e) => {
+  export default (props, { $f7, $update, $f7router, $store }) => {
+    var page = 0;
+    var allowLoad = false;
+    var loading = true;
+    var items = [];
+    const limit = 20 ;
+    
+    $f7.on('login', () => init());
+    $f7.on('refreshExpense', () => init());    
 
+    const loadMore = () => {  
+      if (!allowLoad) return;
+
+      var totalItems = $store.getters.expenses.value.length;
+      if(page >= (totalItems/limit)) return;
+
+      allowLoad = false;
+      loading = true;
+      $update();
+
+      $store.dispatch('getExpensesOffset', { page, limit })
+      .then((expenses) => {
+        items.push(...expenses);
+        page++;
+        allowLoad = true;
+        loading = false;
+        $update();
+      });
     }
 
+    const refresh = (e) => {
+      $f7router.navigate('/expense-list/', {reloadCurrent: true});
+      $f7.emit('refreshExpense');
+    }
+
+    const init  = () => {
+      items = [];
+      page = 0;
+
+      $store.dispatch('getExpensesOffset', { page, limit })
+      .then((expenses) => {
+        items.push(...expenses);
+        page++;
+        allowLoad = true;
+        loading = false;
+        $update();
+      });
+    }
     return $render;
   }
 </script>

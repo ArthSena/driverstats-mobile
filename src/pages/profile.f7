@@ -16,7 +16,7 @@
             <div class="item-inner">
               <div class="item-title item-label">Name</div>
               <div class="item-input-wrap">
-                <input type="text" placeholder="Your name" value="Arthur"/>
+                <input id="name-field" type="text" placeholder="Your name" value="${username}"/>
               </div>
             </div>
           </div>
@@ -26,7 +26,7 @@
             <div class="item-inner">
               <div class="item-title item-label">E-mail</div>
               <div class="item-input-wrap">
-                <input type="email" placeholder="E-mail" value="artsnaofc@gmail.com" />
+                <input id="email-field" type="email" placeholder="E-mail" value="${email}" />
               </div>
             </div>
           </div>
@@ -36,13 +36,13 @@
             <div class="item-inner">
               <div class="item-title item-label">New Password</div>
               <div class="item-input-wrap">
-                <input type="password" placeholder="New Password" />
+                <input id="password-field" type="password" placeholder="New Password" />
               </div>
             </div>
             <div class="item-inner">
               <div class="item-title item-label">Confirm Password</div>
               <div class="item-input-wrap">
-                <input type="password" placeholder="Confirm Password" />
+                <input id="repassword-field" type="password" placeholder="Confirm Password" />
               </div>
             </div>
           </div>
@@ -51,7 +51,7 @@
           <div class="item-content item-input">
             <div class="item-inner">
               <div class="item-input-wrap">
-                <input class="button button-fill button-large" type="submit" value="Update Profile"/>
+                <input @click="${updateProfile}" class="button button-fill button-large" type="submit" value="Update Profile"/>
               </div>
             </div>
           </div>
@@ -87,10 +87,54 @@
 </div>
 </template>
 <script>
-  export default (props, { $f7, $f7router, $store }) => {
+  export default (props, { $f7, $on, $f7router, $store }) => {
     const categories = $store.getters.categories;
 
+    var username;
+    var email;
+
+    $f7.on('login', (auth) => {
+      username = auth.user.name;
+      email = auth.user.email;
+    })
+
     var isClicked = false;
+
+    const updateProfile = (e) => {
+      const name = document.getElementById('name-field').value;
+      var emailField = document.getElementById('email-field').value;
+      const newPassword = document.getElementById('password-field').value;
+      const confirmPassword = document.getElementById('repassword-field').value;
+
+      if(newPassword) {
+        if(confirmPassword) {
+          if(newPassword != confirmPassword) { $f7.dialog.alert("Passwords do not match."); return; }
+        } else {
+          $f7.dialog.alert("Please, Confirm your password."); return; 
+        }
+      }
+
+      if(emailField) {
+        console.log(emailField);
+        console.log(email);
+        if(emailField == email){
+          emailField = undefined;
+        }
+      }
+
+      $f7.dialog.prompt('Type your current password', function(currentPassword) {
+        console.log(currentPassword);
+        $store.dispatch('updateProfile', { name, email: emailField, newPassword, confirmPassword, currentPassword })
+        .then((data) => {
+          if(data.code) 
+            $f7.dialog.alert(data.message);
+          else 
+            $f7.dialog.alert("Profile updated successfully");
+            document.getElementById('my-login-screen').classList.remove('modal-out')
+            document.getElementById('my-login-screen').classList.add('modal-in')
+          })
+      });
+    }
 
     const deleteCategory = (e) => {
       if(isClicked) return;
@@ -117,6 +161,8 @@
       isClicked = true;
       const id = $(e.target).attr('data-id');
       $f7.dialog.prompt('What is the new name of this category?', function(name) {
+        if(name == "") { isClicked = false; updateCategory(e); return; }
+
         $store.dispatch('updateCategory', { id, name })
         .then(() => {
           isClicked = false;

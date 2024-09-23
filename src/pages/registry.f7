@@ -111,13 +111,17 @@
         ` : $h` 
           <div style="margin-bottom: 15px;">
             <a href="#" @click="${updateRegistry}" data-id="${currentRegistry.id}" class="button button-fill button-raised button-large">Update</a>
-          </div>    
+          </div>  
+        `}
+
+                
+        ${((currentRegistry.state == "CLOSED") && (new Date(currentRegistry.createdAt).setHours(0,0,0,0) == new Date().setHours(0,0,0,0))) ? $h` 
           <div>
             <a href="#" @click="${reopenRegistry}" data-id="${currentRegistry.id}" class="button button-fill button-raised button-large">Re-Open</a>
           </div>
-        `}
-        
+        ` : ''}
       </div>
+      
     </div>
   </div>
 </template>
@@ -141,7 +145,7 @@
     ;
     const editTrips = (e) => {
       $f7.dialog.prompt('New trip amount:', (amount) => {
-        if (isNaN(amount) || amount < 0) { editTrips(e); return; }
+        if (isNaN(amount) || amount == "" || amount < 0) { editTrips(e); return; }
         trips = parseInt(amount);
         $update();
       });
@@ -149,7 +153,7 @@
 
     const editBilled = (e) => {
       $f7.dialog.prompt('New billed amount:', (amount) => {
-        if (isNaN(amount) || amount < 0) { editBilled(e); return; }
+        if (isNaN(amount) || amount == "" || amount < 0) { editBilled(e); return; }
         billed = parseFloat(amount);
         $update();
       });
@@ -157,7 +161,7 @@
 
     const editFinalMileage = (e) => {
       $f7.dialog.prompt('New final mileage amount:', (amount) => {
-        if (isNaN(amount) || amount < 0) { editFinalMileage(e); return; }
+        if (isNaN(amount) || amount == "" || amount < 0) { editFinalMileage(e); return; }
         finalMileage = parseFloat(amount);
         if(finalMileage < initialMileage) finalMileage = finalMileage + initialMileage
         totalMileage = finalMileage - initialMileage;
@@ -167,7 +171,7 @@
 
     const editInitialMileage = (e) => {
       $f7.dialog.prompt('New initial mileage amount:', (amount) => {
-        if (isNaN(amount) || amount < 0) { editInitialMileage(e); return; }
+        if (isNaN(amount) || amount == "" || amount < 0) { editInitialMileage(e); return; }
         initialMileage = parseFloat(amount);
         totalMileage = finalMileage > initialMileage ? finalMileage - initialMileage : 0
         $update();
@@ -182,6 +186,7 @@
           Home($store).then(() => {});
           $f7.dialog.alert('Registry Deleted!');
           $f7router.back(); //navigate back
+          $f7.emit('refreshRegistry');
         });
       });
     };
@@ -197,6 +202,7 @@
         Home($store).then(() => isClicked = false);
         $f7.dialog.alert('Registry Closed!');
         $f7router.back(); //navigate back
+        $f7.emit('refreshRegistry');
       })
     }
 
@@ -208,6 +214,7 @@
       .then(() => {
         Home($store).then(() => isClicked = false);
         $f7.dialog.alert('Registry Updated!');
+        $f7.emit('refreshRegistry');
       })
     }
 
@@ -223,6 +230,7 @@
         Home($store).then(() => isClicked = false);
         $f7.dialog.alert('Registry Openned!');
         $f7router.back(); //navigate back
+        $f7.emit('refreshRegistry');
       })
     }
 

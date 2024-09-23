@@ -11,41 +11,146 @@
         </div>
         <div class="title">${currentExpense.title}</div>
         <div class="right">
-          <a href="#" class="btn-edit f7-icons">pencil</a>
-          <a href="#" data-id="${currentExpense.id}" @click="${deleteDialog}" class="btn-delete f7-icons">trash</a>
+          <a href="#" data-id="${currentExpense.id}" @click="${deleteExpense}" class="btn-delete f7-icons">trash</a>
         </div>
       </div>
     </div>
     <div class="page-content">
       <div class="block-title">About: ${currentExpense.description} </div>
-      <div class="block">
-        <p>Date: ${currentExpense.date.toLocaleString()}</p>
-        <p>Category: ${currentExpense.category}</p>
-        <p>Amount: ${currentExpense.amount}</p>
+      <div class="">
+        <div class="list list-strong-ios list outline-ios list-dividers-ios">
+          <ul>
+            <li>
+              <a class="item-content ">
+                <div class="item-inner">
+                  <div class="item-title" style="color: #fff;">Id:</div>
+                  <span class="item-span disabled">${currentExpense.id}</span>  
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="item-content item-link" href="#" @click="${editDescription}">
+                <div class="item-inner">
+                  <div class="item-title">Description:</div>
+                  <span class="item-span">${description}</span>  
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="item-content item-link" href="#" @click="${editAmount}">
+                <div class="item-inner">
+                  <div class="item-title">Amount:</div>
+                  <span class="item-span">${amount}</span>  
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="item-content item-link" href="#">
+                <div class="item-inner">
+                  <div class="item-title">Category:</div>
+                  <div>
+                    <select style="font-size: 14px; color: #9e9e9e;" id="category-field" placeholder="Please choose...">
+
+                      ${categoryId == undefined ? $h`
+                        <option value="">Undefined</option>
+                      `: ''}
+
+                      ${categories.value.map((category) => $h`
+                        ${(categoryId != undefined && categoryId == category.id) ? $h`
+                          <option value="${category.id}" selected>${category.name}</option>
+                          ` : $h`
+                          <option value="${category.id}">${category.name}</option>
+                          `}
+                      `)}
+                    </select>
+                  </div>
+
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="item-content">
+                <div class="item-inner">
+                  <div class="item-title" style="color: #fff;">Date:</div>
+                  <span class="item-span disabled">${date}</span>  
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div style="margin-bottom: 15px;">
+          <a href="#" @click="${updateExpense}" data-id="${currentExpense.id}" class="button button-fill button-raised button-large">Update</a>
+        </div>  
       </div>
     </div>
   </div>
 </template>
 <script>
-  export default (props, { $f7, $f7router, $f7route, $store }) => {
+    import Home from "../js/Home.js";
+
+  export default (props, { $f7, $f7router, $f7route, $store, $update }) => {
+    const categories = $store.getters.categories;
     const expenses = $store.getters.expenses;
     const expenseId = $f7route.params.id;
     let currentExpense;
-    expenses.value.forEach((expense) => {
-      if (expense.id === expenseId) {
-        currentExpense = expense;
-      }
-    });
+    expenses.value.forEach((expense) => { if (expense.id === expenseId) { currentExpense = expense; } });
 
-    const deleteDialog = (e) => {
+    const date =  new Date(currentExpense.date).toLocaleString();
+
+    var amount = currentExpense.amount;
+    var description = currentExpense.description;
+    
+    var categoryId = undefined;
+    if(currentExpense.category) { categoryId = currentExpense.category.id;}
+    if (!(categories.value.some((category) => category.id === categoryId))) { categoryId = undefined; }
+
+    const editDescription = (e) => {
+      $f7.dialog.prompt('New description:', (newDescription) => {
+        if (newDescription== "") { editDescription(e); return; }
+        description = newDescription;
+        $update();
+      })
+    }
+
+    const editAmount = (e) => {
+      $f7.dialog.prompt('New amount:', (newAmount) => {
+        if (isNaN(newAmount) || newAmount == "" || newAmount < 0) { editAmount(e); return; }
+        amount = parseFloat(newAmount);
+        $update();
+      });
+    }
+
+    
+    const deleteExpense = (e) => {
       const id = $(e.target).attr('data-id');
       
       $f7.dialog.confirm("Are you sure?", function() {
-        $store.dispatch('removeExpense', id);
-        $f7.dialog.alert('Expense Deleted!');
-        $f7router.back();
+        $store.dispatch('deleteExpense', id)
+        .then(() => {
+          Home($store).then(() => {});
+          $f7.dialog.alert('Expense Deleted!');
+          $f7router.navigate('/expense-list/', { reloadCurrent: true });
+          $f7.emit('refreshExpense');
+        })
       });
     };
+
+    var isClicked;
+
+    const updateExpense = (e) => {
+      if(isClicked) return;
+      isClicked = true;
+      const id = $(e.target).attr('data-id');
+      $store.dispatch('updateExpense', {id, description, amount, categoryId:document.getElementById("category-field").value })
+      .then(() => {
+        Home($store).then(() => isClicked = false);
+        $f7.dialog.alert('Expense Updated!');
+        $f7router.navigate('/expense-list/', { reloadCurrent: true });
+        $f7.emit('refreshExpense');
+
+      })
+
+    }
 
     return $render;
   };

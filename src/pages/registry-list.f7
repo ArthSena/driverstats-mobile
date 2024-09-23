@@ -4,7 +4,9 @@
       <div class="navbar-bg"></div>
       <div class="navbar-inner sliding">
         <div class="title">Registries</div>
-
+        <div class="right">
+          <a href="#" @click="${refresh}" class="item-link">Refresh</a>
+        </div>
 
       </div>
     </div>
@@ -15,37 +17,63 @@
       </a>
     </div>
 
-    <div class="page-content">
-      
-      <div class="list list-strong list-dividers-ios list-outline-ios inset-md">
+    <div data-infinite-distance="50" class="page-content infinite-scroll-content" @infinite=${loadMore}>      
+      <div class="list list-strong list-dividers-ios list-outline-ios inset-md" style="margin-bottom: 150px;">
         <ul>
-          ${registries.value.map((registry) => {
-            const createdAt =  new Date(registry.createdAt).toLocaleString();
-            const closedAt = registry.closedAt ? new Date(registry.closedAt).toLocaleString() : undefined;
-            return $h`            
-          <li>
-            <a class="item-content item-link" href="/registry/${registry.id}/">
-              <div class="item-inner">
-                <div class="registry-item-title">${createdAt} - ${closedAt}</div>
-                <span class="badge registry-status ${registry.state}"> ${registry.state}</span>
-
-              </div>
-            </a>
-          </li>
+          ${items.map((registry) => {            
+            const formatedCreatedAt =  new Date(registry.createdAt).toLocaleString();
+            const formatedClosedAt = registry.closedAt ? new Date(registry.closedAt).toLocaleString() : undefined;
+            return $h`         
+              <li>
+                <a class="item-content item-link" href="/registry/${registry.id}/">
+                  <div class="item-inner">
+                    <div class="registry-item-title">${formatedCreatedAt} - ${formatedClosedAt}</div>
+                    <span class="badge registry-status ${registry.state}"> ${registry.state}</span>
+                  </div>
+                </a>
+              </li>
           `})}
         </ul>
+        ${loading ? $h`<div class="preloader infinite-scroll-preloader"></div>` : ''}
       </div>
 
-      <div class="m-bottom"></div>
-
     </div>
+
+
   </div>
 </template>
 <script>
   import Home from "../js/Home.js";
+  
+  export default (props, { $f7, $f7router, $store, $update }) => {
+    var page = 0;
+    var allowLoad = false;
+    var loading = true;
+    var items = [];
+    const limit = 20 ;
+    
+    $f7.on('login', () => init());
+    $f7.on('refreshRegistry', () => init());
 
-  export default (props, { $f7, $f7router, $store }) => {
-    const registries = $store.getters.registries;
+    const loadMore = () => {  
+      if (!allowLoad) return;
+
+      var totalItems = $store.getters.registries.value.length;
+      if(page >= (totalItems/limit)) return;
+
+      allowLoad = false;
+      loading = true;
+      $update();
+
+      $store.dispatch('getRegistriesOffset', { page, limit })
+      .then((registries) => {
+        items.push(...registries);
+        page++;
+        allowLoad = true;
+        loading = false;
+        $update();
+      });
+    }
 
     const createRegistry = (e) => {
       $f7.dialog.prompt('Type the initial mileage', (amount) => {
@@ -53,15 +81,36 @@
         const initialMileage = parseFloat(amount);
         $store.dispatch('createRegistry', { initialMileage })
         .then((registry) => {
-          console.log('/registry/' + registry.id + '/')
+          if(registry.code) {
+            $f7.dialog.alert(registry.message);
+            isClicked = false;
+            return;
+          }
           Home($store).then(() => $f7router.navigate('/registry/' + registry.id + '/'));
           $f7.dialog.alert('Registry Created!');
-          
+          $f7.emit('refreshRegistry');
         })
       });
     }
 
+    const refresh = (e) => {
+      $f7router.navigate('/registry-list/', {reloadCurrent: true});
+      $f7.emit('refreshRegistry');
+    }
+    
+    const init  = () => {
+      items = [];
+      page = 0;
 
+      $store.dispatch('getRegistriesOffset', { page, limit })
+      .then((registries) => {
+        items.push(...registries);
+        page++;
+        allowLoad = true;
+        loading = false;
+        $update();
+      });
+    }
     return $render;
   }
 
