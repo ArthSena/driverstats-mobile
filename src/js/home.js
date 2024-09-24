@@ -49,9 +49,9 @@ export default async (store) => {
 
     weeklyPieChart = new Chart(document.getElementById('weeklyPieChart'), { type: 'doughnut',
         data: {
-            labels: [ 'Billed: R$ ' + data.oneWeekBilled,
-                      'Expensed: R$ ' + data.oneWeekExpensed,
-                      'Milleage: ' + data.oneWeekMileage + ' KM',
+            labels: ['Billed: ' + new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.oneWeekBilled),
+                'Expensed: ' + new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.oneWeekExpensed),
+                'Mileage: ' + data.oneWeekMileage + ' KM'
             ],
             datasets: [{
                 label: '', backgroundColor: [ '#31db31', '#d44232', '#00ace9' ], borderColor: 'rgba(255, 255, 255, 0)',
@@ -65,7 +65,9 @@ export default async (store) => {
             labels: Object.keys(data.dailyData),
             datasets: [{
                 label: 'Hours Worked', backgroundColor: ['rgba(255, 205, 86, 0.5)'], borderColor: 'rgba(255, 255, 255, 0)',
-                data: Object.values(data.dailyData).map(d => d.hoursWorked)
+                data: Object.values(data.dailyData).map(d =>{
+                    return d.hoursWorked;
+                })
             }, {
                 label: 'Trips', backgroundColor: ['rgba(54, 162, 235, 0.5)'],borderColor: 'rgba(255, 255, 255, 0)',
                 data: Object.values(data.dailyData).map(d => d.trips)
@@ -157,8 +159,35 @@ const toDataSet = (registries, expenses) => {
         }
 
         const registryDate = createdAt.toLocaleString().split(',')[0];
+        var hoursWorked = 0;
+        var minutesWorked = 0;
+
+        if(registry.closedAt != null) {
+            var diff = (new Date(registry.closedAt).getTime() - createdAt.getTime()) / 1000;
+            diff /= (60 * 60);
+            hoursWorked = Math.abs(Math.round(diff));
+            minutesWorked = Math.abs(Math.round(diff * 60)); 
+            if(minutesWorked > 60) minutesWorked = Math.abs(Math.round(minutesWorked / hoursWorked));
+        }
+
+        if(dailyData[registryDate]) {
+            if(dailyData[registryDate].hoursWorked)
+                hoursWorked += dailyData[registryDate].hoursWorked;
+            if(dailyData[registryDate].minutesWorked)
+                minutesWorked += dailyData[registryDate].minutesWorked;
+        }
+
+        if(minutesWorked > 60) {
+            hoursWorked++;
+            minutesWorked -= 60;
+            console.log(minutesWorked);
+
+            hoursWorked += minutesWorked / 100;
+        }
+
         dailyData[registryDate] = {
-            hoursWorked: registry.closedAt ? Math.abs(new Date(registry.closedAt).getTime() - createdAt.getTime()) / (1000 * 60 * 60) : 0,
+            hoursWorked,
+            minutesWorked,
             trips: registry.trips,
         }
 
