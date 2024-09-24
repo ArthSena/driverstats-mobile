@@ -71,7 +71,7 @@
           <li>
             <div class="item-content item-link">
               <div class="item-inner" data-id="${category.id}" @click="${updateCategory}" c>
-                <div lass="item-link">${category.name}</div>
+                <div class="item-link" style="color: ${category.color};">${category.name}</div>
                 <a href="#" data-id="${category.id}" @click="${deleteCategory}" class="btn-delete f7-icons">trash</a>
               </div>
             </a>
@@ -87,6 +87,8 @@
 </div>
 </template>
 <script>
+  import Home from "../js/Home.js";
+
   export default (props, { $f7, $on, $f7router, $store }) => {
     const categories = $store.getters.categories;
 
@@ -142,16 +144,24 @@
       const id = $(e.target).attr('data-id');
       $f7.dialog.confirm("Are you sure to delete?", function() {
         $store.dispatch('deleteCategory', id)
-        .then(() => isClicked = false);
+        .then(() => {
+          Home($store).then(() => isClicked = false);
+        });
         $f7.dialog.alert(name + ' Deleted!');
       }, () => isClicked = false);
     }
 
     const createCategory = (e) => {
       $f7.dialog.prompt('What is name of the category?', function(name) {
-        $store.dispatch('createCategory', name)
-        .then(() => {
+        $store.dispatch('createCategory', { name, color: "#" + Math.floor(Math.random()*16777215).toString(16) })
+        .then((category) => {
+          if(category.code) {
+            $f7.dialog.alert(category.message);
+            return;
+          }
+          Home($store).then(() => {});
           $f7.dialog.alert('Ok, created category: ' + name + "!");
+
         });
       });
     }
@@ -165,7 +175,7 @@
 
         $store.dispatch('updateCategory', { id, name })
         .then(() => {
-          isClicked = false;
+          Home($store).then(() => isClicked = false);
           $f7.dialog.alert('Ok, now the name is: ' + name + "!");
           $f7router.navigate('/profile/');
         });

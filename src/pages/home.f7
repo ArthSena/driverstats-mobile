@@ -67,21 +67,35 @@
           <canvas id="weeklyPieChart"></canvas>
         </div>
       </div>
-
-      <div class="block-title">Weekly Hours Worked Statistics</div>
+      <div class="block-title">Last 7 Days Hours Worked Statistics</div>
+      <div class="block charts">
+        <div class="bar-chart">
+          <canvas id="weeklyBarChart2"></canvas>
+        </div>
+      </div>
       <div class="block charts">
         <div class="bar-chart">
           <canvas id="weeklyBarChart"></canvas>
         </div>
       </div>
-
+      <div class="block-title">Monthly Expense Statistics</div>
+      <div class=" block charts">
+        <div class="bar-chart">
+          <canvas id="monthlyExpensePieChart"></canvas>
+        </div>
+      </div>
+      <div class="block-title">Last 7 Days Average Earnings Statistics</div>
+      <div class="block charts">
+        <div class="bar-chart">
+          <canvas id="weeklyAverageEarningBarChart"></canvas>
+        </div>
+      </div>
       <div class="block-title">Annually Statistics</div>
       <div class=" block charts">
         <div class="bar-chart">
           <canvas id="annuallyLineChart"></canvas>
         </div>
       </div>
-
       <div class="m-bottom"></div>
 
     </div>

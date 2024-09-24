@@ -122,12 +122,13 @@
 
     
     const deleteExpense = (e) => {
+      if(isClicked) return;
+      isClicked = true;
       const id = $(e.target).attr('data-id');
-      
       $f7.dialog.confirm("Are you sure?", function() {
         $store.dispatch('deleteExpense', id)
         .then(() => {
-          Home($store).then(() => {});
+          Home($store).then(() => isClicked = false);
           $f7.dialog.alert('Expense Deleted!');
           $f7router.navigate('/expense-list/', { reloadCurrent: true });
           $f7.emit('refreshExpense');

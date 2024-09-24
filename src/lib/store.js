@@ -1,5 +1,7 @@
 import { createStore } from 'framework7';
 
+const BASE_URL = "http://localhost:8080";
+
 const store = createStore({
   state: {
     auth: [],
@@ -29,7 +31,7 @@ const store = createStore({
     },
     async login({ state }, { email, password} ) {
       try {
-        const res = await fetch('http://localhost:8080/v1/auth/login', {
+        const res = await fetch(BASE_URL + '/v1/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
@@ -49,7 +51,7 @@ const store = createStore({
     },
     async register({ state }, { name, email, password, confirmPassword } ) {
       try {
-        const res = await fetch('http://localhost:8080/v1/auth/register', {
+        const res = await fetch(BASE_URL + '/v1/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, email, password, confirmPassword })
@@ -67,9 +69,20 @@ const store = createStore({
         console.log('Error:', err);
       }
     },
+    async refresh({state}) {
+      const res = await fetch(BASE_URL + '/v1/auth/refresh', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Token '+ store.state.auth.token },
+      });
+      const data = await res.json();
+      if(!data.code) {
+        store.dispatch('setAuth', data);
+      }
+      return data;
+    },
     async updateProfile({ state }, { name, email, newPassword, confirmPassword, currentPassword }) {
       try {
-        const res = await fetch(`http://localhost:8080/v1/profile`, {
+        const res = await fetch(BASE_URL + '/v1/profile', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Token '+ store.state.auth.token },
           body: JSON.stringify({ name, email, currentPassword, newPassword, confirmPassword,  })
@@ -89,7 +102,7 @@ const store = createStore({
 
     // EXPENSE
     getExpenses({ state }) {
-      fetch('http://localhost:8080/v1/expense/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }})
+      fetch(BASE_URL + '/v1/expense/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }})
       .then((res) => res.json())
       .then((data) => {
         state.expenses = data.list;
@@ -97,7 +110,7 @@ const store = createStore({
     },
     async getExpensesOffset({ state }, { page, limit }) {
       try {
-        const res = await fetch('http://localhost:8080/v1/expense/all?' + new URLSearchParams({ page, limit }), { headers: {'Authorization': 'Token ' + store.state.auth.token }})
+        const res = await fetch(BASE_URL + '/v1/expense/all?' + new URLSearchParams({ page, limit }), { headers: {'Authorization': 'Token ' + store.state.auth.token }})
         const data = await res.json();
         return data.list;
       } catch (err) {
@@ -106,11 +119,12 @@ const store = createStore({
     },
     async createExpense({ state }, { description, amount, categoryId } ) {
       try {
-        const res = await fetch(`http://localhost:8080/v1/expense`, {
+        const res = await fetch(BASE_URL + '/v1/expense', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Token '+ store.state.auth.token },
           body: JSON.stringify({ description, amount, categoryId })
         })
+        store.dispatch('refresh');
         store.dispatch('getExpenses');
         const data = await res.json();
         return data;
@@ -120,7 +134,7 @@ const store = createStore({
     },
     async deleteExpense({ state }, id) {
       try {
-        await fetch(`http://localhost:8080/v1/expense/${id}`, {
+        await fetch(BASE_URL + `/v1/expense/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': 'Token ' + store.state.auth.token }
         })
@@ -131,11 +145,12 @@ const store = createStore({
     },
     async updateExpense({ state }, { id, description, amount, categoryId }) {
       try {
-        await fetch(`http://localhost:8080/v1/expense/${id}`, {
+        await fetch(BASE_URL + `/v1/expense/${id}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Token '+ store.state.auth.token },
           body: JSON.stringify({ description, amount, categoryId })
         })
+        store.dispatch('refresh');
         store.dispatch('getExpenses');
       } catch (error) {
         console.log('Error:', err);
@@ -145,19 +160,20 @@ const store = createStore({
 
     // CATEGORY
     getCategories({ state }) {
-      fetch('http://localhost:8080/v1/category/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }})
+      fetch(BASE_URL + '/v1/category/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }})
       .then((res) => res.json())
       .then((data) => {
         state.categories = data.list;
       })
     },
-    async createCategory({ state }, name ) {
+    async createCategory({ state }, { name, color } ) {
       try {
-        const res = await fetch(`http://localhost:8080/v1/category`, {
+        const res = await fetch(BASE_URL + '/v1/category', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Token '+ store.state.auth.token },
-          body: JSON.stringify({ name })
+          body: JSON.stringify({ name, color })
         })
+        store.dispatch('refresh');
         store.dispatch('getCategories');
         const data = await res.json();
         return data;
@@ -167,7 +183,7 @@ const store = createStore({
     },
     async updateCategory({ state }, { id, name }) {
       try {
-        await fetch(`http://localhost:8080/v1/category/${id}`, {
+        await fetch(BASE_URL + `/v1/category/${id}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Token '+ store.state.auth.token },
           body: JSON.stringify({ name })
@@ -179,7 +195,7 @@ const store = createStore({
     },
     async deleteCategory({ state }, id) {
       try {
-        await fetch(`http://localhost:8080/v1/category/${id}`, {
+        await fetch(BASE_URL + `/v1/category/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': 'Token ' + store.state.auth.token }
         })
@@ -191,7 +207,7 @@ const store = createStore({
 
     // REGISTRY //
     getRegistries({ state }) {
-      fetch('http://localhost:8080/v1/registry/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }})
+      fetch(BASE_URL + '/v1/registry/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }})
       .then((res) => res.json())
       .then((data) => {
         state.registries = data.list;
@@ -199,7 +215,7 @@ const store = createStore({
     },
     async getRegistriesOffset({ state }, { page, limit }) {
       try {
-        const res = await fetch('http://localhost:8080/v1/registry/all?' + new URLSearchParams({ page, limit }), { headers: {'Authorization': 'Token ' + store.state.auth.token }})
+        const res = await fetch(BASE_URL + '/v1/registry/all?' + new URLSearchParams({ page, limit }), { headers: {'Authorization': 'Token ' + store.state.auth.token }})
         const data = await res.json();
         return data.list;
       } catch (err) {
@@ -208,11 +224,12 @@ const store = createStore({
     },
     async createRegistry({ state }, {initialMileage}) {
       try {
-        const res = await fetch(`http://localhost:8080/v1/registry`, {
+        const res = await fetch(BASE_URL + '/v1/registry', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Token '+ store.state.auth.token },
           body: JSON.stringify({ initialMileage })
         })
+        store.dispatch('refresh');
         store.dispatch('getRegistries');
         const data = await res.json();
         return data;
@@ -222,10 +239,11 @@ const store = createStore({
     },
     async reopenRegistry({ state }, {id}) {
       try {
-        await fetch(`http://localhost:8080/v1/registry/${id}/reopen`, {
+        await fetch(BASE_URL + `/v1/registry/${id}/reopen`, {
           method: 'POST',
           headers: { 'Authorization': 'Token '+ store.state.auth.token }
         })
+        store.dispatch('refresh');
         store.dispatch('getRegistries');
       } catch (error) {
         console.log('Error:', err);
@@ -233,11 +251,12 @@ const store = createStore({
     },
     async closeRegistry({ state }, {id, billed, finalMileage, trips}) {
       try {
-        await fetch(`http://localhost:8080/v1/registry/${id}/close`, {
+        await fetch(BASE_URL + `/v1/registry/${id}/close`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Token '+ store.state.auth.token },
           body: JSON.stringify({ billed, finalMileage, trips })
         })
+        store.dispatch('refresh');
         store.dispatch('getRegistries');
       } catch (error) {
         console.log('Error:', err);
@@ -245,11 +264,12 @@ const store = createStore({
     },
     async updateRegistry({ state }, {id, billed, initialMileage, finalMileage, trips}) {
       try {
-        await fetch(`http://localhost:8080/v1/registry/${id}`, {
+        await fetch(BASE_URL + `/v1/registry/${id}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Token '+ store.state.auth.token },
           body: JSON.stringify({ billed, initialMileage, finalMileage, trips })
         })
+        store.dispatch('refresh');
         store.dispatch('getRegistries');
       } catch (error) {
         console.log('Error:', err);
@@ -257,7 +277,7 @@ const store = createStore({
     },
     async deleteRegistry({ state }, id) {
       try {
-        await fetch(`http://localhost:8080/v1/registry/${id}`, {
+        await fetch(BASE_URL + `/v1/registry/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': 'Token ' + store.state.auth.token }
         })
