@@ -124,7 +124,7 @@
     const deleteExpense = (e) => {
       if(isClicked) return;
       isClicked = true;
-      const id = $(e.target).attr('data-id');
+      const id = e.target.getAttribute('data-id');
       $f7.dialog.confirm("Are you sure?", function() {
         $store.dispatch('deleteExpense', id)
         .then(() => {
@@ -141,7 +141,7 @@
     const updateExpense = (e) => {
       if(isClicked) return;
       isClicked = true;
-      const id = $(e.target).attr('data-id');
+      const id = e.target.getAttribute('data-id');
       $store.dispatch('updateExpense', {id, description, amount, categoryId:document.getElementById("category-field").value })
       .then(() => {
         Home($store).then(() => isClicked = false);

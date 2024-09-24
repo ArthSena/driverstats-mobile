@@ -1,6 +1,6 @@
 import { createStore } from 'framework7';
 
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "https://driverstats.artsna.xyz";
 
 const store = createStore({
   state: {
@@ -46,7 +46,11 @@ const store = createStore({
         }
         return data;
       } catch (err) {
-        console.log('Error:', err);
+        console.log(err);
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async register({ state }, { name, email, password, confirmPassword } ) {
@@ -66,7 +70,10 @@ const store = createStore({
         }
         return data;
       } catch (err) {
-        console.log('Error:', err);
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async refresh({state}) {
@@ -94,8 +101,11 @@ const store = createStore({
         }
 
         return data;
-      } catch (error) {
-        console.log('Error:', err);
+      } catch (err) {
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
 
@@ -114,7 +124,10 @@ const store = createStore({
         const data = await res.json();
         return data.list;
       } catch (err) {
-        console.log('Error:', err);
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async createExpense({ state }, { description, amount, categoryId } ) {
@@ -128,8 +141,11 @@ const store = createStore({
         store.dispatch('getExpenses');
         const data = await res.json();
         return data;
-      } catch (error) {
-        console.log('Error:', err);
+      } catch (err) {
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async deleteExpense({ state }, id) {
@@ -139,8 +155,11 @@ const store = createStore({
           headers: { 'Authorization': 'Token ' + store.state.auth.token }
         })
         store.dispatch('getExpenses');
-      } catch (error) {
-        console.log('Error:', err);
+      } catch (err) {
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async updateExpense({ state }, { id, description, amount, categoryId }) {
@@ -152,8 +171,11 @@ const store = createStore({
         })
         store.dispatch('refresh');
         store.dispatch('getExpenses');
-      } catch (error) {
-        console.log('Error:', err);
+      } catch (err) {
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
 
@@ -177,8 +199,11 @@ const store = createStore({
         store.dispatch('getCategories');
         const data = await res.json();
         return data;
-      } catch (error) {
-        console.log('Error:', err);
+      } catch (err) {
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async updateCategory({ state }, { id, name }) {
@@ -189,8 +214,11 @@ const store = createStore({
           body: JSON.stringify({ name })
         })
         store.dispatch('getCategories');
-      } catch (error) {
-        console.log('Error:', err);
+      } catch (err) {
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async deleteCategory({ state }, id) {
@@ -200,8 +228,11 @@ const store = createStore({
           headers: { 'Authorization': 'Token ' + store.state.auth.token }
         })
         store.dispatch('getCategories');
-      } catch (error) {
-        console.log('Error:', err);
+      } catch (err) {
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
 
@@ -219,7 +250,10 @@ const store = createStore({
         const data = await res.json();
         return data.list;
       } catch (err) {
-        console.log('Error:', err);
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async createRegistry({ state }, {initialMileage}) {
@@ -234,7 +268,10 @@ const store = createStore({
         const data = await res.json();
         return data;
       } catch (err) {
-        console.log('Error:', err);
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async reopenRegistry({ state }, {id}) {
@@ -245,8 +282,11 @@ const store = createStore({
         })
         store.dispatch('refresh');
         store.dispatch('getRegistries');
-      } catch (error) {
-        console.log('Error:', err);
+      } catch (err) {
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async closeRegistry({ state }, {id, billed, finalMileage, trips}) {
@@ -258,8 +298,11 @@ const store = createStore({
         })
         store.dispatch('refresh');
         store.dispatch('getRegistries');
-      } catch (error) {
-        console.log('Error:', err);
+      } catch (err) {
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async updateRegistry({ state }, {id, billed, initialMileage, finalMileage, trips}) {
@@ -271,8 +314,11 @@ const store = createStore({
         })
         store.dispatch('refresh');
         store.dispatch('getRegistries');
-      } catch (error) {
-        console.log('Error:', err);
+      } catch (err) {
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     },
     async deleteRegistry({ state }, id) {
@@ -283,8 +329,11 @@ const store = createStore({
         })
 
         store.dispatch('getRegistries');
-      } catch (error) {
-        console.log('Error:', err);
+      } catch (err) {
+        return {
+          code: 500,
+          message: err.message
+        }
       }
     }
 

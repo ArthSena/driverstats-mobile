@@ -41,8 +41,6 @@
   </div>
 </template>
 <script>
-  import Home from "../js/Home.js";
-
   export default (props, { $f7, $update, $f7router, $store }) => {
     var page = 0;
     var allowLoad = false;

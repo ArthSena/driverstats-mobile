@@ -141,7 +141,7 @@
     const deleteCategory = (e) => {
       if(isClicked) return;
       isClicked = true;
-      const id = $(e.target).attr('data-id');
+      const id = e.target.getAttribute('data-id');
       $f7.dialog.confirm("Are you sure to delete?", function() {
         $store.dispatch('deleteCategory', id)
         .then(() => {
@@ -169,7 +169,7 @@
     const updateCategory = (e) => {
       if(isClicked) return;
       isClicked = true;
-      const id = $(e.target).attr('data-id');
+      const id = e.target.getAttribute('data-id');
       $f7.dialog.prompt('What is the new name of this category?', function(name) {
         if(name == "") { isClicked = false; updateCategory(e); return; }
 

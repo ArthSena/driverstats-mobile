@@ -179,7 +179,7 @@
     }
 
     const deleteDialog = (e) => {
-      const id = $(e.target).attr('data-id');
+      const id = e.target.getAttribute('data-id');
       $f7.dialog.confirm("Are you sure?", () => {
         $store.dispatch('deleteRegistry', id)
         .then(() => {
@@ -196,7 +196,7 @@
     const closeRegistry = (e) => {
       if(isClicked) return;
       isClicked = true;
-      const id = $(e.target).attr('data-id');
+      const id = e.target.getAttribute('data-id');
       $store.dispatch('closeRegistry', {id, billed, finalMileage, trips})
       .then(() => {
         Home($store).then(() => isClicked = false);
@@ -209,7 +209,7 @@
     const updateRegistry = (e) => {
       if(isClicked) return;
       isClicked = true;
-      const id = $(e.target).attr('data-id');
+      const id = e.target.getAttribute('data-id');
       $store.dispatch('updateRegistry', {id, billed, initialMileage, finalMileage, trips})
       .then(() => {
         Home($store).then(() => isClicked = false);
@@ -224,7 +224,7 @@
         return;
       }
       isClicked = true;
-      const id = $(e.target).attr('data-id');
+      const id = e.target.getAttribute('data-id');
       $store.dispatch('reopenRegistry', {id, billed, initialMileage, finalMileage, trips})
       .then(() => {
         Home($store).then(() => isClicked = false);

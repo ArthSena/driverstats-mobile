@@ -16,6 +16,8 @@
   <meta name="theme-color" content="#212121">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+
   <title>Driver Stats</title>
   
 
@@ -26,8 +28,10 @@
   <div id="app"></div>
 
   <% if (TARGET === 'cordova') { %> <script src="cordova.js"></script> <% } %>
-  <script src="./lib/jquery.js"></script>
-  <script src="./lib/chart.js"></script>
+  
+  <script type="module" src="./lib/jquery.js"></script>
+  <script type="module" src="./lib/chart.js"></script>
+
   <script type="module" src="./lib/app.js"></script>
   
 </body>

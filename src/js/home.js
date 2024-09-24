@@ -6,18 +6,21 @@ var monthlyExpensePieChart;
 var weeklyAverageEarningBarChart;
 var weeklyBarChart2;
 export default async (store) => {
+    const BASE_URL = "https://driverstats.artsna.xyz";
+
+
     document.getElementById("card-trips").innerHTML = "Loading...";
     document.getElementById("card-billed").innerHTML = "Loading...";
     document.getElementById("card-expensed").innerHTML = "Loading...";
     document.getElementById("card-mileage").innerHTML = "Loading...";
 
-    const registryResponse = await fetch('http://localhost:8080/v1/registry/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }});
+    const registryResponse = await fetch(BASE_URL + '/v1/registry/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }});
     const registryData = await registryResponse.json();
 
-    const expenseResponse = await fetch('http://localhost:8080/v1/expense/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }});
+    const expenseResponse = await fetch(BASE_URL + '/v1/expense/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }});
     const expenseData = await expenseResponse.json();
 
-    const categoryResponse = await fetch('http://localhost:8080/v1/category/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }});
+    const categoryResponse = await fetch(BASE_URL + '/v1/category/all', { headers: {'Authorization': 'Token ' + store.state.auth.token }});
     const categoryData = await categoryResponse.json();
 
     const data = toDataSet(registryData.list, expenseData.list, categoryData.list);
@@ -223,8 +226,6 @@ const toDataSet = (registries, expenses, categories) => {
         if(minutesWorked > 60) {
             hoursWorked++;
             minutesWorked -= 60;
-            console.log(minutesWorked);
-
             hoursWorked += minutesWorked / 100;
         }
 
